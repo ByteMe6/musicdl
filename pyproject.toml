@@ -30,6 +30,9 @@ classifiers = [
     "Topic :: Utilities",
 ]
 
+[project.optional-dependencies]
+test = ["pytest>=8", "pytest-cov>=5"]
+
 [project.urls]
 Homepage = "https://github.com/ByteMe6/musicdl"
 Issues = "https://github.com/ByteMe6/musicdl/issues"
@@ -40,6 +43,13 @@ musicdl = "musicdl:main"
 
 [tool.setuptools]
 py-modules = ["musicdl"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.coverage.report]
+exclude_also = ['if __name__ == .__main__.:']
 
 [tool.ruff]
 line-length = 100

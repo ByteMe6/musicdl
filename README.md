@@ -330,9 +330,12 @@ Issues and pull requests are welcome.
 ```bash
 git clone https://github.com/ByteMe6/musicdl.git && cd musicdl
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt ruff
+pip install -e ".[test]" ruff
 ruff check .
+pytest --cov=musicdl
 ```
+
+The test suite stubs every network and subprocess call, so it runs offline in under a second and never touches Spotify or YouTube.
 
 Please keep pull requests focused, and describe what you changed and why.
 
