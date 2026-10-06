@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-10-06
+
 ### Added
 - Ukrainian and Russian translations of the README.
 - A section on exporting playlists from Spotify, Apple Music, YouTube Music and other services with TuneMyMusic.
@@ -29,4 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - PyInstaller spec, plus prebuilt binaries for Linux, macOS and Windows on x86_64 and ARM64.
 - Automated releases: pushing a new version to `master` builds and publishes all binaries.
 
+[Unreleased]: https://github.com/ByteMe6/trackfetch/compare/v2.0.0...HEAD
+[2.0.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v2.0.0
 [1.0.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v1.0.0
