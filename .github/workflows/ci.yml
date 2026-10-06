@@ -34,3 +34,18 @@ jobs:
         run: trackfetch --help
       - name: Tests
         run: pytest --cov=trackfetch --cov-report=term-missing --cov-fail-under=95
+
+  nix:
+    name: nix (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+      - name: Build
+        run: nix build -L
+      - name: CLI responds
+        run: ./result/bin/trackfetch --help
