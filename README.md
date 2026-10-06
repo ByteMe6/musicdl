@@ -6,7 +6,7 @@
 
 Spotify supplies the metadata and album art, YouTube supplies the audio. musicdl scores the candidates on both sides to pick the best match.
 
-[![CI](https://github.com/ByteMe6/musicdl/actions/workflows/ci.yml/badge.svg)](https://github.com/ByteMe6/musicdl/actions/workflows/ci.yml)
+[![Build & Release](https://github.com/ByteMe6/musicdl/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/ByteMe6/musicdl/actions/workflows/release.yml)
 [![Release](https://img.shields.io/github/v/release/ByteMe6/musicdl?sort=semver)](https://github.com/ByteMe6/musicdl/releases/latest)
 [![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
@@ -55,7 +55,7 @@ SUCCESS: Daft Punk - Harder, Better, Faster, Stronger.mp3
 - **Wide player support.** Tags are written as ID3v2.3, which Windows Explorer, iTunes/Music, Android, car stereos and most other players read.
 - **Unicode-aware.** Cyrillic and other non-Latin titles are normalised for matching and kept in filenames.
 - **Safe filenames.** Characters that are illegal on Windows, macOS or Linux are replaced, and long names are truncated.
-- **Standalone binaries.** Prebuilt executables for Linux, macOS and Windows are attached to every release.
+- **Standalone binaries.** Prebuilt executables for Linux, macOS and Windows, each on x86_64 and ARM64, are attached to every release.
 
 ## 📦 Installation
 
@@ -80,12 +80,23 @@ pipx install git+https://github.com/ByteMe6/musicdl.git
 
 ### Option 2: prebuilt binary
 
-Download the executable for your OS from the [latest release](https://github.com/ByteMe6/musicdl/releases/latest), make it executable and put it on your `PATH`:
+Download the executable for your platform from the [latest release](https://github.com/ByteMe6/musicdl/releases/latest):
+
+| OS | x86_64 | ARM64 |
+| --- | --- | --- |
+| 🐧 Linux | [`musicdl-linux-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-x86_64) | [`musicdl-linux-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-arm64) |
+| 🍎 macOS | [`musicdl-macos-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-x86_64) | [`musicdl-macos-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-arm64) |
+| 🪟 Windows | [`musicdl-windows-x86_64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-x86_64.exe) | [`musicdl-windows-arm64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-arm64.exe) |
+
+On Linux and macOS, make it executable and put it on your `PATH`:
 
 ```bash
 chmod +x musicdl-linux-x86_64
 sudo mv musicdl-linux-x86_64 /usr/local/bin/musicdl
 ```
+
+> [!TIP]
+> On macOS, if Gatekeeper blocks the unsigned binary, run `xattr -d com.apple.quarantine musicdl-macos-*` once.
 
 ### Option 3: from source
 
@@ -258,7 +269,27 @@ pyinstaller musicdl.spec
 ./dist/musicdl --help
 ```
 
-Release binaries are built the same way by [GitHub Actions](.github/workflows/release.yml) whenever a `v*` tag is pushed.
+## 🚢 Releasing
+
+Releases are fully automated by the [Build & Release](.github/workflows/release.yml) workflow:
+
+```mermaid
+flowchart LR
+    P["push to master"] --> CI["CI: lint + tests<br/>3 OS × 2 Python"]
+    P --> V{"version in pyproject.toml<br/>already tagged?"}
+    V -- yes --> S["done, no release"]
+    V -- no --> B["build 6 binaries<br/>Linux · macOS · Windows<br/>x86_64 + ARM64"]
+    CI --> B
+    B --> R["GitHub Release<br/>vX.Y.Z musicdl"]
+```
+
+To cut a new release:
+
+1. Bump `version` in [`pyproject.toml`](pyproject.toml).
+2. Add a `## [X.Y.Z] - YYYY-MM-DD` section to [`CHANGELOG.md`](CHANGELOG.md). It becomes the release notes.
+3. Push to `master`.
+
+Pushes that don't change the version only run CI.
 
 ## 🩺 Troubleshooting
 
