@@ -5,6 +5,7 @@
 
 <p align="center">
   <a href="https://github.com/ByteMe6/trackfetch/releases/latest"><img alt="Последний релиз" src="https://img.shields.io/github/v/release/ByteMe6/trackfetch?style=flat-square&label=release&labelColor=15122B&color=FFB547"></a>
+  <a href="https://pypi.org/project/trackfetch/"><img alt="PyPI" src="https://img.shields.io/pypi/v/trackfetch?style=flat-square&label=pypi&labelColor=15122B&color=FFB547"></a>
   <a href="https://github.com/ByteMe6/trackfetch/actions/workflows/release.yml"><img alt="Статус сборки" src="https://img.shields.io/github/actions/workflow/status/ByteMe6/trackfetch/release.yml?branch=master&style=flat-square&label=build&labelColor=15122B"></a>
   <a href="#установка"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-FFB547?style=flat-square&labelColor=15122B"></a>
   <a href="#готовый-бинарник"><img alt="Linux, macOS и Windows на x86_64 и ARM64" src="https://img.shields.io/badge/linux%20%C2%B7%20macos%20%C2%B7%20windows-x86__64%20%2B%20arm64-FFB547?style=flat-square&labelColor=15122B"></a>
@@ -43,13 +44,32 @@ trackfetch читает обычный текстовый файл, где на 
 
 ## Установка
 
-trackfetch нужны эти программы в `PATH` и бесплатный ключ Spotify API ([как его получить](#ключи-spotify)):
+Выбери любой способ. Homebrew и Nix сами ставят yt-dlp, FFmpeg и Deno; при остальных способах их нужно поставить отдельно ([см. ниже](#зависимости)). Для любого способа нужен бесплатный ключ Spotify API ([как его получить](#ключи-spotify)).
 
-| Программа | Зачем | Установка |
-| --- | --- | --- |
-| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Поиск и загрузка с YouTube | `pipx install yt-dlp` · `brew install yt-dlp` · `winget install yt-dlp` |
-| [FFmpeg](https://ffmpeg.org/) | Конвертация звука в MP3 | `sudo apt install ffmpeg` · `brew install ffmpeg` · `winget install ffmpeg` |
-| [Deno](https://deno.com/) | Среда JavaScript, без которой yt-dlp не работает с YouTube | `curl -fsSL https://deno.land/install.sh \| sh` · `brew install deno` · `winget install DenoLand.Deno` |
+### Homebrew
+
+macOS и Linux:
+
+```bash
+brew install ByteMe6/tap/trackfetch
+```
+
+На Intel-Mac Homebrew собирает зависимости из исходников, поэтому первая установка займёт время.
+
+### Nix
+
+Linux и Mac на Apple Silicon, с включёнными flakes:
+
+```bash
+nix run github:ByteMe6/trackfetch -- songs.txt   # запустить без установки
+nix profile install github:ByteMe6/trackfetch    # установить
+```
+
+### pipx
+
+```bash
+pipx install trackfetch
+```
 
 ### Готовый бинарник
 
@@ -70,12 +90,6 @@ sudo mv trackfetch-linux-x86_64 /usr/local/bin/trackfetch
 
 Если на macOS Gatekeeper блокирует неподписанный бинарник, один раз выполни `xattr -d com.apple.quarantine trackfetch-macos-*`. Контрольные суммы лежат в `SHA256SUMS.txt` в каждом релизе.
 
-### pipx
-
-```bash
-pipx install git+https://github.com/ByteMe6/trackfetch.git
-```
-
 ### Из исходников
 
 ```bash
@@ -84,6 +98,16 @@ cd trackfetch
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
+
+### Зависимости
+
+При установке через pipx, готовым бинарником или из исходников эти программы должны быть в `PATH`:
+
+| Программа | Зачем | Установка |
+| --- | --- | --- |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Поиск и загрузка с YouTube | `pipx install yt-dlp` · `brew install yt-dlp` · `winget install yt-dlp` |
+| [FFmpeg](https://ffmpeg.org/) | Конвертация звука в MP3 | `sudo apt install ffmpeg` · `brew install ffmpeg` · `winget install ffmpeg` |
+| [Deno](https://deno.com/) | Среда JavaScript, без которой yt-dlp не работает с YouTube | `curl -fsSL https://deno.land/install.sh \| sh` · `brew install deno` · `winget install DenoLand.Deno` |
 
 ## Ключи Spotify
 

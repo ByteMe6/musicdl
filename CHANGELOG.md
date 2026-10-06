@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+### Added
+- Install with Homebrew (`brew install ByteMe6/tap/trackfetch`), from PyPI (`pipx install trackfetch`) or with Nix (`nix run github:ByteMe6/trackfetch`).
+- Releases are published to PyPI automatically.
+- An AUR package definition in `packaging/aur/`.
+
 ## [2.0.0] - 2026-10-06
 
 ### Added

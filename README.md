@@ -1,18 +1,19 @@
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
-  <img alt="trackfetch: a text file of songs in, tagged MP3s with cover art out" src=".github/assets/banner-light.svg" width="100%">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ByteMe6/trackfetch/master/.github/assets/banner-dark.svg">
+  <img alt="trackfetch: a text file of songs in, tagged MP3s with cover art out" src="https://raw.githubusercontent.com/ByteMe6/trackfetch/master/.github/assets/banner-light.svg" width="100%">
 </picture>
 
 <p align="center">
   <a href="https://github.com/ByteMe6/trackfetch/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/ByteMe6/trackfetch?style=flat-square&label=release&labelColor=15122B&color=FFB547"></a>
+  <a href="https://pypi.org/project/trackfetch/"><img alt="PyPI" src="https://img.shields.io/pypi/v/trackfetch?style=flat-square&label=pypi&labelColor=15122B&color=FFB547"></a>
   <a href="https://github.com/ByteMe6/trackfetch/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/ByteMe6/trackfetch/release.yml?branch=master&style=flat-square&label=build&labelColor=15122B"></a>
   <a href="#install"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-FFB547?style=flat-square&labelColor=15122B"></a>
   <a href="#standalone-binary"><img alt="Linux, macOS and Windows on x86_64 and ARM64" src="https://img.shields.io/badge/linux%20%C2%B7%20macos%20%C2%B7%20windows-x86__64%20%2B%20arm64-FFB547?style=flat-square&labelColor=15122B"></a>
-  <a href="LICENSE"><img alt="License: GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-FFB547?style=flat-square&labelColor=15122B"></a>
+  <a href="https://github.com/ByteMe6/trackfetch/blob/master/LICENSE"><img alt="License: GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-FFB547?style=flat-square&labelColor=15122B"></a>
 </p>
 
 <p align="center">
-  <b>English</b> · <a href="README.uk.md">Українська</a> · <a href="README.ru.md">Русский</a>
+  <b>English</b> · <a href="https://github.com/ByteMe6/trackfetch/blob/master/README.uk.md">Українська</a> · <a href="https://github.com/ByteMe6/trackfetch/blob/master/README.ru.md">Русский</a>
 </p>
 
 <p align="center">
@@ -26,7 +27,7 @@
 
 <br>
 
-<img alt="Terminal recording: trackfetch skips two songs that are already downloaded, finds Daft Punk - One More Time on Spotify, scores five YouTube results, downloads the best one and saves a tagged MP3" src=".github/assets/demo.svg" width="100%">
+<img alt="Terminal recording: trackfetch skips two songs that are already downloaded, finds Daft Punk - One More Time on Spotify, scores five YouTube results, downloads the best one and saves a tagged MP3" src="https://raw.githubusercontent.com/ByteMe6/trackfetch/master/.github/assets/demo.svg" width="100%">
 
 <br>
 
@@ -43,13 +44,32 @@ trackfetch reads a plain text file with one `Artist - Title` per line. For every
 
 ## Install
 
-trackfetch needs these tools on your `PATH`, plus a free Spotify API key ([set it up below](#spotify-credentials)):
+Pick one. Homebrew and Nix also install yt-dlp, FFmpeg and Deno for you; with the other methods, install them yourself ([see below](#dependencies)). Every method needs a free Spotify API key ([set it up below](#spotify-credentials)).
 
-| Tool | Used for | Install |
-| --- | --- | --- |
-| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Searching and downloading from YouTube | `pipx install yt-dlp` · `brew install yt-dlp` · `winget install yt-dlp` |
-| [FFmpeg](https://ffmpeg.org/) | Converting the audio to MP3 | `sudo apt install ffmpeg` · `brew install ffmpeg` · `winget install ffmpeg` |
-| [Deno](https://deno.com/) | JavaScript runtime that yt-dlp needs for YouTube | `curl -fsSL https://deno.land/install.sh \| sh` · `brew install deno` · `winget install DenoLand.Deno` |
+### Homebrew
+
+macOS and Linux:
+
+```bash
+brew install ByteMe6/tap/trackfetch
+```
+
+On Intel Macs, Homebrew builds the dependencies from source, so the first install takes a while.
+
+### Nix
+
+Linux and Apple Silicon Macs, with flakes enabled:
+
+```bash
+nix run github:ByteMe6/trackfetch -- songs.txt   # run without installing
+nix profile install github:ByteMe6/trackfetch    # install
+```
+
+### pipx
+
+```bash
+pipx install trackfetch
+```
 
 ### Standalone binary
 
@@ -70,12 +90,6 @@ sudo mv trackfetch-linux-x86_64 /usr/local/bin/trackfetch
 
 On macOS, if Gatekeeper blocks the unsigned binary, run `xattr -d com.apple.quarantine trackfetch-macos-*` once. Checksums are in `SHA256SUMS.txt` on each release.
 
-### pipx
-
-```bash
-pipx install git+https://github.com/ByteMe6/trackfetch.git
-```
-
 ### From source
 
 ```bash
@@ -84,6 +98,16 @@ cd trackfetch
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
+
+### Dependencies
+
+With pipx, a standalone binary or a source install, put these on your `PATH`:
+
+| Tool | Used for | Install |
+| --- | --- | --- |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Searching and downloading from YouTube | `pipx install yt-dlp` · `brew install yt-dlp` · `winget install yt-dlp` |
+| [FFmpeg](https://ffmpeg.org/) | Converting the audio to MP3 | `sudo apt install ffmpeg` · `brew install ffmpeg` · `winget install ffmpeg` |
+| [Deno](https://deno.com/) | JavaScript runtime that yt-dlp needs for YouTube | `curl -fsSL https://deno.land/install.sh \| sh` · `brew install deno` · `winget install DenoLand.Deno` |
 
 ## Spotify credentials
 
@@ -182,7 +206,7 @@ Daft Punk - One More Time
 Sufjan Stevens - Mystery of Love - Remastered   ← only the first " - " separates artist and title
 ```
 
-The separator is space, hyphen, space (` - `). Lines without it are skipped. See [`examples/songs.txt`](examples/songs.txt).
+The separator is space, hyphen, space (` - `). Lines without it are skipped. See [`examples/songs.txt`](https://github.com/ByteMe6/trackfetch/blob/master/examples/songs.txt).
 
 ### Output folder
 
@@ -205,7 +229,7 @@ trackfetch retry.txt
 
 ### Cheat sheet
 
-A [tldr](https://tldr.sh/) page is in [`docs/tldr/trackfetch.md`](docs/tldr/trackfetch.md). To use it with [tealdeer](https://github.com/tealdeer-rs/tealdeer), copy it into your custom pages folder as `trackfetch.page.md`.
+A [tldr](https://tldr.sh/) page is in [`docs/tldr/trackfetch.md`](https://github.com/ByteMe6/trackfetch/blob/master/docs/tldr/trackfetch.md). To use it with [tealdeer](https://github.com/tealdeer-rs/tealdeer), copy it into your custom pages folder as `trackfetch.page.md`.
 
 ## How it works
 
@@ -282,11 +306,11 @@ pytest --cov=trackfetch
 
 The tests stub every network and subprocess call, so they run offline in under a second. To build a standalone binary yourself, run `pip install pyinstaller && pyinstaller trackfetch.spec`; it ends up in `dist/`.
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
+See [CONTRIBUTING.md](https://github.com/ByteMe6/trackfetch/blob/master/CONTRIBUTING.md) before opening a pull request.
 
 ### Releasing
 
-Every push to `master` runs the tests on Linux, macOS and Windows. When `version` in [`pyproject.toml`](pyproject.toml) has no matching `vX.Y.Z` tag yet, the [Build & Release](.github/workflows/release.yml) workflow also builds all six binaries and publishes a release, using that version's section of [`CHANGELOG.md`](CHANGELOG.md) as the notes.
+Every push to `master` runs the tests on Linux, macOS and Windows. When `version` in [`pyproject.toml`](https://github.com/ByteMe6/trackfetch/blob/master/pyproject.toml) has no matching `vX.Y.Z` tag yet, the [Build & Release](https://github.com/ByteMe6/trackfetch/blob/master/.github/workflows/release.yml) workflow also builds all six binaries and publishes a release, using that version's section of [`CHANGELOG.md`](https://github.com/ByteMe6/trackfetch/blob/master/CHANGELOG.md) as the notes.
 
 To release, move the changes under `[Unreleased]` in the changelog to a new `## [X.Y.Z] - YYYY-MM-DD` section, bump `version`, and push.
 
@@ -299,4 +323,4 @@ trackfetch is for personal use with content you have the right to download. You 
 
 ## License
 
-trackfetch is free software, released under the [GNU General Public License v3.0 or later](LICENSE). You can use, study, change and share it. If you distribute a modified version, it must stay under the same license.
+trackfetch is free software, released under the [GNU General Public License v3.0 or later](https://github.com/ByteMe6/trackfetch/blob/master/LICENSE). You can use, study, change and share it. If you distribute a modified version, it must stay under the same license.
