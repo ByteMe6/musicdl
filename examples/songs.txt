@@ -1,9 +1,0 @@
-# trackfetch input file
-# One song per line in the form:  Artist - Title
-# Blank lines and lines starting with "#" are ignored.
-
-Severny Flot - ИNОЙ
-Epidemia - Час испытания
-Korol i Shut - Мёртвый Анархист
-Daft Punk - Harder, Better, Faster, Stronger
-Radiohead - Paranoid Android
