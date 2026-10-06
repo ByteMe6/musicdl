@@ -291,6 +291,9 @@ To cut a new release:
 
 Pushes that don't change the version only run CI.
 
+> [!IMPORTANT]
+> Bump the version in a commit that doesn't edit `.github/workflows/`. GitHub doesn't allow the workflow token to tag a commit that changes workflow files, so the release step would fail with a 403.
+
 ## 🩺 Troubleshooting
 
 <details>

@@ -2,6 +2,9 @@ name: Build & Release
 
 # Every push to master runs CI. A release is published only when the
 # version in pyproject.toml has no matching vX.Y.Z tag yet.
+#
+# GITHUB_TOKEN may not create a tag on a commit that edits .github/workflows/,
+# so bump the version in a commit that leaves workflow files untouched.
 on:
   push:
     branches: [master]
