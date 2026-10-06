@@ -1,11 +1,11 @@
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.uk.svg">
-  <img alt="musicdl: текстовий файл із піснями на вході, MP3 з тегами й обкладинками на виході" src=".github/assets/banner-light.uk.svg" width="100%">
+  <img alt="trackfetch: текстовий файл із піснями на вході, MP3 з тегами й обкладинками на виході" src=".github/assets/banner-light.uk.svg" width="100%">
 </picture>
 
 <p align="center">
-  <a href="https://github.com/ByteMe6/musicdl/releases/latest"><img alt="Останній реліз" src="https://img.shields.io/github/v/release/ByteMe6/musicdl?style=flat-square&label=release&labelColor=15122B&color=FFB547"></a>
-  <a href="https://github.com/ByteMe6/musicdl/actions/workflows/release.yml"><img alt="Статус збірки" src="https://img.shields.io/github/actions/workflow/status/ByteMe6/musicdl/release.yml?branch=master&style=flat-square&label=build&labelColor=15122B"></a>
+  <a href="https://github.com/ByteMe6/trackfetch/releases/latest"><img alt="Останній реліз" src="https://img.shields.io/github/v/release/ByteMe6/trackfetch?style=flat-square&label=release&labelColor=15122B&color=FFB547"></a>
+  <a href="https://github.com/ByteMe6/trackfetch/actions/workflows/release.yml"><img alt="Статус збірки" src="https://img.shields.io/github/actions/workflow/status/ByteMe6/trackfetch/release.yml?branch=master&style=flat-square&label=build&labelColor=15122B"></a>
   <a href="#встановлення"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-FFB547?style=flat-square&labelColor=15122B"></a>
   <a href="#готовий-бінарний-файл"><img alt="Linux, macOS і Windows на x86_64 та ARM64" src="https://img.shields.io/badge/linux%20%C2%B7%20macos%20%C2%B7%20windows-x86__64%20%2B%20arm64-FFB547?style=flat-square&labelColor=15122B"></a>
   <a href="LICENSE"><img alt="Ліцензія: GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-FFB547?style=flat-square&labelColor=15122B"></a>
@@ -26,15 +26,15 @@
 
 <br>
 
-<img alt="Запис термінала: musicdl пропускає дві вже завантажені пісні, знаходить Daft Punk - One More Time у Spotify, оцінює п'ять результатів YouTube, завантажує найкращий і зберігає MP3 з тегами" src=".github/assets/demo.svg" width="100%">
+<img alt="Запис термінала: trackfetch пропускає дві вже завантажені пісні, знаходить Daft Punk - One More Time у Spotify, оцінює п'ять результатів YouTube, завантажує найкращий і зберігає MP3 з тегами" src=".github/assets/demo.svg" width="100%">
 
 <br>
 
-musicdl читає звичайний текстовий файл, де в кожному рядку записано `Виконавець - Назва`. Для кожної пісні він бере офіційні метадані й обкладинку зі Spotify, обирає найвідповідніше аудіо на YouTube і зберігає MP3 з повними ID3-тегами. Роботу можна перервати будь-коли й продовжити пізніше, навіть якщо у списку тисяча пісень.
+trackfetch читає звичайний текстовий файл, де в кожному рядку записано `Виконавець - Назва`. Для кожної пісні він бере офіційні метадані й обкладинку зі Spotify, обирає найвідповідніше аудіо на YouTube і зберігає MP3 з повними ID3-тегами. Роботу можна перервати будь-коли й продовжити пізніше, навіть якщо у списку тисяча пісень.
 
 - **Точні метадані.** Назва, усі виконавці, альбом, виконавець альбому, номер треку й дата виходу беруться зі Spotify, а не з назви ролика на YouTube.
 - **Обкладинка альбому.** У кожен файл вбудовується обкладинка зі Spotify у найбільшому розмірі.
-- **Правильне завантаження.** musicdl оцінює п'ять результатів YouTube для кожної пісні. Офіційне аудіо виграє, а кавери, караоке, nightcore, прискорені, сповільнені версії, ремікси й реакції програють.
+- **Правильне завантаження.** trackfetch оцінює п'ять результатів YouTube для кожної пісні. Офіційне аудіо виграє, а кавери, караоке, nightcore, прискорені, сповільнені версії, ремікси й реакції програють.
 - **Найкраща якість.** yt-dlp витягує звук у MP3 VBR максимальної якості.
 - **Продовження з місця зупинки.** Готові пісні записуються в `done.txt` і під час наступного запуску пропускаються. Помилки потрапляють у `failed.txt` разом із причиною.
 - **Грає всюди.** Теги записуються у форматі ID3v2.3, який розуміють Провідник Windows, Apple Music, Android, автомагнітоли й більшість плеєрів.
@@ -43,7 +43,7 @@ musicdl читає звичайний текстовий файл, де в ко�
 
 ## Встановлення
 
-musicdl потрібні ці програми в `PATH` і безкоштовний ключ Spotify API ([як його отримати](#ключі-spotify)):
+trackfetch потрібні ці програми в `PATH` і безкоштовний ключ Spotify API ([як його отримати](#ключі-spotify)):
 
 | Програма | Навіщо | Встановлення |
 | --- | --- | --- |
@@ -53,44 +53,44 @@ musicdl потрібні ці програми в `PATH` і безкоштовн
 
 ### Готовий бінарний файл
 
-Python не потрібен. Завантаж файл для своєї системи з [останнього релізу](https://github.com/ByteMe6/musicdl/releases/latest):
+Python не потрібен. Завантаж файл для своєї системи з [останнього релізу](https://github.com/ByteMe6/trackfetch/releases/latest):
 
 | | x86_64 | ARM64 |
 | --- | --- | --- |
-| **Linux** | [`musicdl-linux-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-x86_64) | [`musicdl-linux-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-arm64) |
-| **macOS** | [`musicdl-macos-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-x86_64) (Intel) | [`musicdl-macos-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-arm64) (Apple Silicon) |
-| **Windows** | [`musicdl-windows-x86_64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-x86_64.exe) | [`musicdl-windows-arm64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-arm64.exe) |
+| **Linux** | [`trackfetch-linux-x86_64`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-linux-x86_64) | [`trackfetch-linux-arm64`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-linux-arm64) |
+| **macOS** | [`trackfetch-macos-x86_64`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-macos-x86_64) (Intel) | [`trackfetch-macos-arm64`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-macos-arm64) (Apple Silicon) |
+| **Windows** | [`trackfetch-windows-x86_64.exe`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-windows-x86_64.exe) | [`trackfetch-windows-arm64.exe`](https://github.com/ByteMe6/trackfetch/releases/latest/download/trackfetch-windows-arm64.exe) |
 
 На Linux і macOS зроби файл виконуваним і поклади його в `PATH`:
 
 ```bash
-chmod +x musicdl-linux-x86_64
-sudo mv musicdl-linux-x86_64 /usr/local/bin/musicdl
+chmod +x trackfetch-linux-x86_64
+sudo mv trackfetch-linux-x86_64 /usr/local/bin/trackfetch
 ```
 
-Якщо на macOS Gatekeeper блокує непідписаний файл, один раз виконай `xattr -d com.apple.quarantine musicdl-macos-*`. Контрольні суми є у `SHA256SUMS.txt` у кожному релізі.
+Якщо на macOS Gatekeeper блокує непідписаний файл, один раз виконай `xattr -d com.apple.quarantine trackfetch-macos-*`. Контрольні суми є у `SHA256SUMS.txt` у кожному релізі.
 
 ### pipx
 
 ```bash
-pipx install git+https://github.com/ByteMe6/musicdl.git
+pipx install git+https://github.com/ByteMe6/trackfetch.git
 ```
 
 ### З вихідного коду
 
 ```bash
-git clone https://github.com/ByteMe6/musicdl.git
-cd musicdl
+git clone https://github.com/ByteMe6/trackfetch.git
+cd trackfetch
 python -m venv .venv && source .venv/bin/activate
 pip install -e .
 ```
 
 ## Ключі Spotify
 
-musicdl використовує у Spotify режим Client Credentials: входити в акаунт не потрібно, доступу до твого профілю програма не має.
+trackfetch використовує у Spotify режим Client Credentials: входити в акаунт не потрібно, доступу до твого профілю програма не має.
 
 1. Відкрий [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) і натисни **Create app**.
-2. Введи будь-яку назву й опис. У полі Redirect URI вкажи `http://127.0.0.1:8888/callback`. musicdl його не використовує, але без нього форма не зберігається.
+2. Введи будь-яку назву й опис. У полі Redirect URI вкажи `http://127.0.0.1:8888/callback`. trackfetch його не використовує, але без нього форма не зберігається.
 3. Відкрий **Settings** застосунку й скопіюй **Client ID** та **Client Secret**.
 4. Задай їх як змінні середовища:
 
@@ -137,41 +137,41 @@ Radiohead - Paranoid Android
 Korol i Shut - Мёртвый Анархист
 EOF
 
-musicdl songs.txt
+trackfetch songs.txt
 ```
 
-Файли з'являться в `~/Music/musicdl/`.
+Файли з'являться в `~/Music/trackfetch/`.
 
 ## Плейлисти зі стрімінгових сервісів
 
-Список не обов'язково набирати вручну. [TuneMyMusic](https://www.tunemymusic.com/) експортує плейлисти зі Spotify, Apple Music, YouTube Music, Deezer, Tidal, SoundCloud та інших сервісів у текстовий файл, який musicdl читає без жодних змін:
+Список не обов'язково набирати вручну. [TuneMyMusic](https://www.tunemymusic.com/) експортує плейлисти зі Spotify, Apple Music, YouTube Music, Deezer, Tidal, SoundCloud та інших сервісів у текстовий файл, який trackfetch читає без жодних змін:
 
 1. На [tunemymusic.com](https://www.tunemymusic.com/) обери джерелом сервіс, де лежить твій плейлист.
 2. Познач потрібні плейлисти.
 3. Як призначення обери **Export to file** і збережи у форматі **TXT**.
-4. Запусти musicdl на отриманому файлі:
+4. Запусти trackfetch на отриманому файлі:
 
 ```bash
-musicdl "My Playlist.txt" -o ~/Music/"My Playlist"
+trackfetch "My Playlist.txt" -o ~/Music/"My Playlist"
 ```
 
 ## Використання
 
 ```text
-musicdl [-h] [-o OUTPUT] [--title-only] [--delay DELAY] input
+trackfetch [-h] [-o OUTPUT] [--title-only] [--delay DELAY] input
 ```
 
 | Параметр | За замовчуванням | Що робить |
 | --- | --- | --- |
 | `input` | обов'язковий | Текстовий файл, де в кожному рядку `Виконавець - Назва` |
-| `-o`, `--output` | `~/Music/musicdl` | Тека для MP3. Якщо її немає, вона буде створена. |
+| `-o`, `--output` | `~/Music/trackfetch` | Тека для MP3. Якщо її немає, вона буде створена. |
 | `--title-only` | вимкнено | Називати файли `Назва.mp3` замість `Виконавець - Назва.mp3` |
 | `--delay` | `1.0` | Пауза між піснями в секундах. Для довгих списків її варто збільшити. |
 
 ```bash
-musicdl songs.txt -o ~/Music/RoadTrip          # зберегти в конкретну теку
-musicdl songs.txt -o /media/usb --title-only   # короткі імена для автомагнітоли
-musicdl big-list.txt --delay 3                 # дбайливіше до лімітів запитів
+trackfetch songs.txt -o ~/Music/RoadTrip          # зберегти в конкретну теку
+trackfetch songs.txt -o /media/usb --title-only   # короткі імена для автомагнітоли
+trackfetch big-list.txt --delay 3                 # дбайливіше до лімітів запитів
 ```
 
 ### Вхідний файл
@@ -187,7 +187,7 @@ Sufjan Stevens - Mystery of Love - Remastered   ← виконавця й наз
 ### Тека з результатами
 
 ```text
-~/Music/musicdl/
+~/Music/trackfetch/
 ├── Daft Punk - One More Time.mp3
 ├── Radiohead - Paranoid Android.mp3
 ├── done.txt      ← готові пісні, під час наступного запуску пропускаються
@@ -197,20 +197,20 @@ Sufjan Stevens - Mystery of Love - Remastered   ← виконавця й наз
 **Повторити невдалі:** прибери причини з `failed.txt` і запусти ще раз:
 
 ```bash
-cut -d '|' -f 1 ~/Music/musicdl/failed.txt > retry.txt
-musicdl retry.txt
+cut -d '|' -f 1 ~/Music/trackfetch/failed.txt > retry.txt
+trackfetch retry.txt
 ```
 
 **Завантажити пісню заново:** видали її MP3 і її рядок у `done.txt`.
 
 ### Шпаргалка
 
-Сторінка для [tldr](https://tldr.sh/) лежить у [`docs/tldr/musicdl.md`](docs/tldr/musicdl.md). Щоб користуватися нею в [tealdeer](https://github.com/tealdeer-rs/tealdeer), скопіюй її в теку користувацьких сторінок під іменем `musicdl.page.md`.
+Сторінка для [tldr](https://tldr.sh/) лежить у [`docs/tldr/trackfetch.md`](docs/tldr/trackfetch.md). Щоб користуватися нею в [tealdeer](https://github.com/tealdeer-rs/tealdeer), скопіюй її в теку користувацьких сторінок під іменем `trackfetch.page.md`.
 
 ## Як це працює
 
-1. **Пошук пісні у Spotify.** musicdl шукає `artist:"…" track:"…"`, а якщо нічого не знайшлося, виконує менш суворий пошук. Кожен результат оцінюється за нечіткою схожістю: 70% дає назва, 30% виконавець. Найкращий результат дає офіційне написання, усіх виконавців, дані альбому й обкладинку.
-2. **Пошук аудіо на YouTube.** musicdl шукає на YouTube офіційних виконавця й назву та оцінює перші п'ять результатів:
+1. **Пошук пісні у Spotify.** trackfetch шукає `artist:"…" track:"…"`, а якщо нічого не знайшлося, виконує менш суворий пошук. Кожен результат оцінюється за нечіткою схожістю: 70% дає назва, 30% виконавець. Найкращий результат дає офіційне написання, усіх виконавців, дані альбому й обкладинку.
+2. **Пошук аудіо на YouTube.** trackfetch шукає на YouTube офіційних виконавця й назву та оцінює перші п'ять результатів:
 
    | Ознака | Вплив на оцінку |
    | --- | --- |
@@ -221,7 +221,7 @@ musicdl retry.txt
    | `cover`, `karaoke`, `караоке`, `nightcore`, `sped up`, `slowed`, `remix`, `reaction` | −0.20 за кожне |
 
 3. **Завантаження.** yt-dlp завантажує лише ролик-переможець і конвертує його в MP3.
-4. **Теги.** musicdl замінює всі наявні теги такими фреймами ID3v2.3:
+4. **Теги.** trackfetch замінює всі наявні теги такими фреймами ID3v2.3:
 
    | Фрейм | Вміст |
    | --- | --- |
@@ -261,7 +261,7 @@ YouTube часто змінюється. Спершу онови yt-dlp: `pipx u
 <details>
 <summary><b>Завантажилася не та версія пісні</b></summary>
 
-Уточни рядок у файлі, наприклад напиши назву точно так, як її записано у Spotify. Потім видали MP3 і його рядок у `done.txt` та запусти musicdl знову. Якщо програма й далі обирає не той ролик, [створи issue](https://github.com/ByteMe6/musicdl/issues/new?template=bug_report.yml) і додай рядки `YouTube score` з виводу.
+Уточни рядок у файлі, наприклад напиши назву точно так, як її записано у Spotify. Потім видали MP3 і його рядок у `done.txt` та запусти trackfetch знову. Якщо програма й далі обирає не той ролик, [створи issue](https://github.com/ByteMe6/trackfetch/issues/new?template=bug_report.yml) і додай рядки `YouTube score` з виводу.
 
 </details>
 
@@ -277,10 +277,10 @@ YouTube часто змінюється. Спершу онови yt-dlp: `pipx u
 ```bash
 pip install -e ".[test]" ruff
 ruff check .
-pytest --cov=musicdl
+pytest --cov=trackfetch
 ```
 
-Тести підміняють усі мережеві запити й зовнішні процеси, тому працюють без інтернету менш ніж за секунду. Щоб зібрати бінарний файл самостійно, виконай `pip install pyinstaller && pyinstaller musicdl.spec`; результат з'явиться в `dist/`.
+Тести підміняють усі мережеві запити й зовнішні процеси, тому працюють без інтернету менш ніж за секунду. Щоб зібрати бінарний файл самостійно, виконай `pip install pyinstaller && pyinstaller trackfetch.spec`; результат з'явиться в `dist/`.
 
 Перед pull request прочитай [CONTRIBUTING.md](CONTRIBUTING.md) (англійською).
 
@@ -295,8 +295,8 @@ pytest --cov=musicdl
 
 ## Відмова від відповідальності
 
-musicdl призначений для особистого використання й лише для контенту, який ти маєш право завантажувати. Ти сам відповідаєш за дотримання авторського права у своїй країні та умов використання YouTube і Spotify. musicdl не пов'язаний зі Spotify, YouTube і TuneMyMusic і не схвалений ними. Якщо маєш змогу, підтримуй артистів, яких слухаєш.
+trackfetch призначений для особистого використання й лише для контенту, який ти маєш право завантажувати. Ти сам відповідаєш за дотримання авторського права у своїй країні та умов використання YouTube і Spotify. trackfetch не пов'язаний зі Spotify, YouTube і TuneMyMusic і не схвалений ними. Якщо маєш змогу, підтримуй артистів, яких слухаєш.
 
 ## Ліцензія
 
-musicdl — вільне програмне забезпечення під ліцензією [GNU General Public License v3.0 або новішої версії](LICENSE). Його можна використовувати, вивчати, змінювати й поширювати. Змінені версії під час поширення мають залишатися під тією самою ліцензією.
+trackfetch — вільне програмне забезпечення під ліцензією [GNU General Public License v3.0 або новішої версії](LICENSE). Його можна використовувати, вивчати, змінювати й поширювати. Змінені версії під час поширення мають залишатися під тією самою ліцензією.

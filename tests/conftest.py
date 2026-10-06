@@ -15,7 +15,7 @@ def make_track(
     release_date="2001-03-12",
     images=({"url": "https://img/640.jpg"},),
 ):
-    """Minimal Spotify track object with the fields musicdl reads."""
+    """Minimal Spotify track object with the fields trackfetch reads."""
     album_artists = artists if album_artists is None else album_artists
     return {
         "name": name,

@@ -184,7 +184,7 @@ def download_cover(url: str, destination: Path):
         url,
         timeout=30,
         headers={
-            "User-Agent": "musicdl/1.0"
+            "User-Agent": "trackfetch/2.0"
         },
     )
 
@@ -590,7 +590,7 @@ def main():
         "-o",
         "--output",
         type=Path,
-        default=Path.home() / "Music" / "musicdl",
+        default=Path.home() / "Music" / "trackfetch",
         help="Output directory",
     )
 

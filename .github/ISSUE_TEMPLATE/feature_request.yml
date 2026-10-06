@@ -1,5 +1,5 @@
 name: Feature request
-description: Suggest an idea for musicdl
+description: Suggest an idea for trackfetch
 labels: [enhancement]
 body:
   - type: textarea
@@ -13,4 +13,4 @@ body:
     id: solution
     attributes:
       label: Proposed solution
-      description: How would you like musicdl to handle it?
+      description: How would you like trackfetch to handle it?

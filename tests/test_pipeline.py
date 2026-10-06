@@ -4,7 +4,7 @@ import pytest
 from conftest import make_track
 from mutagen.id3 import ID3
 
-import musicdl as m
+import trackfetch as m
 
 
 @pytest.fixture
@@ -111,7 +111,7 @@ class TestProcessSong:
 
 
 def run_cli(monkeypatch, *args):
-    monkeypatch.setattr(sys, "argv", ["musicdl", *map(str, args)])
+    monkeypatch.setattr(sys, "argv", ["trackfetch", *map(str, args)])
     m.main()
 
 

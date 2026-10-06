@@ -1,10 +1,10 @@
-# Contributing to musicdl
+# Contributing to trackfetch
 
 Thanks for helping out. Bug reports, matching improvements, docs fixes and translations are all welcome.
 
 ## Reporting a wrong match
 
-Most bugs are a wrong song being picked. To make these fixable, include in the [bug report](https://github.com/ByteMe6/musicdl/issues/new?template=bug_report.yml):
+Most bugs are a wrong song being picked. To make these fixable, include in the [bug report](https://github.com/ByteMe6/trackfetch/issues/new?template=bug_report.yml):
 
 - the exact `Artist - Title` line from your input file,
 - the `Spotify match score` and `YouTube score` lines from the output,
@@ -13,8 +13,8 @@ Most bugs are a wrong song being picked. To make these fixable, include in the [
 ## Development setup
 
 ```bash
-git clone https://github.com/ByteMe6/musicdl.git
-cd musicdl
+git clone https://github.com/ByteMe6/trackfetch.git
+cd trackfetch
 python -m venv .venv && source .venv/bin/activate
 pip install -e ".[test]" ruff
 ```
@@ -23,8 +23,7 @@ pip install -e ".[test]" ruff
 
 ```bash
 ruff check .            # lint
-ruff format --check .   # formatting
-pytest --cov=musicdl    # tests, offline, under a second
+pytest --cov=trackfetch    # tests, offline, under a second
 ```
 
 - The test suite stubs every network and subprocess call. Keep it that way: tests must never reach Spotify or YouTube.

@@ -53,12 +53,12 @@ jobs:
       fail-fast: true
       matrix:
         include:
-          - { os: ubuntu-latest,    asset: musicdl-linux-x86_64,         binary: dist/musicdl }
-          - { os: ubuntu-24.04-arm, asset: musicdl-linux-arm64,          binary: dist/musicdl }
-          - { os: macos-latest,     asset: musicdl-macos-arm64,          binary: dist/musicdl }
-          - { os: macos-15-intel,   asset: musicdl-macos-x86_64,         binary: dist/musicdl }
-          - { os: windows-latest,   asset: musicdl-windows-x86_64.exe,   binary: dist/musicdl.exe }
-          - { os: windows-11-arm,   asset: musicdl-windows-arm64.exe,    binary: dist/musicdl.exe }
+          - { os: ubuntu-latest,    asset: trackfetch-linux-x86_64,         binary: dist/trackfetch }
+          - { os: ubuntu-24.04-arm, asset: trackfetch-linux-arm64,          binary: dist/trackfetch }
+          - { os: macos-latest,     asset: trackfetch-macos-arm64,          binary: dist/trackfetch }
+          - { os: macos-15-intel,   asset: trackfetch-macos-x86_64,         binary: dist/trackfetch }
+          - { os: windows-latest,   asset: trackfetch-windows-x86_64.exe,   binary: dist/trackfetch.exe }
+          - { os: windows-11-arm,   asset: trackfetch-windows-arm64.exe,    binary: dist/trackfetch.exe }
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
@@ -68,7 +68,7 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pyinstaller
       - name: Build
-        run: pyinstaller musicdl.spec
+        run: pyinstaller trackfetch.spec
       - name: Smoke test
         run: ${{ matrix.binary }} --help
       - name: Rename binary
@@ -109,15 +109,15 @@ jobs:
 
           | OS | x86_64 | ARM64 |
           | --- | --- | --- |
-          | 🐧 Linux | `musicdl-linux-x86_64` | `musicdl-linux-arm64` |
-          | 🍎 macOS | `musicdl-macos-x86_64` | `musicdl-macos-arm64` |
-          | 🪟 Windows | `musicdl-windows-x86_64.exe` | `musicdl-windows-arm64.exe` |
+          | 🐧 Linux | `trackfetch-linux-x86_64` | `trackfetch-linux-arm64` |
+          | 🍎 macOS | `trackfetch-macos-x86_64` | `trackfetch-macos-arm64` |
+          | 🪟 Windows | `trackfetch-windows-x86_64.exe` | `trackfetch-windows-arm64.exe` |
 
-          Verify with `SHA256SUMS.txt`. Binaries still need `yt-dlp`, `ffmpeg` and `deno` on your `PATH`, plus Spotify API credentials. See the [README](https://github.com/ByteMe6/musicdl#install).
+          Verify with `SHA256SUMS.txt`. Binaries still need `yt-dlp`, `ffmpeg` and `deno` on your `PATH`, plus Spotify API credentials. See the [README](https://github.com/ByteMe6/trackfetch#install).
 
           Or install with pipx:
           ```bash
-          pipx install git+https://github.com/ByteMe6/musicdl.git
+          pipx install git+https://github.com/ByteMe6/trackfetch.git
           ```
           MD
           cat notes.md
@@ -125,7 +125,7 @@ jobs:
         with:
           tag_name: ${{ needs.version.outputs.tag }}
           target_commitish: ${{ github.sha }}
-          name: ${{ needs.version.outputs.tag }} musicdl
+          name: ${{ needs.version.outputs.tag }} trackfetch
           body_path: notes.md
           make_latest: true
           files: assets/*

@@ -14,7 +14,7 @@ dist/
 .cache
 .cache-*
 
-# musicdl runtime output
+# trackfetch runtime output
 done.txt
 failed.txt
 *.mp3

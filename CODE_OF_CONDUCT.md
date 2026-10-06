@@ -60,7 +60,7 @@ representative at an online or offline event.
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
 reported privately to the maintainer, [@ByteMe6](https://github.com/ByteMe6),
-through a [private report](https://github.com/ByteMe6/musicdl/security/advisories/new)
+through a [private report](https://github.com/ByteMe6/trackfetch/security/advisories/new)
 (visible only to maintainers) or through GitHub's
 [report abuse form](https://github.com/contact/report-abuse).
 All complaints will be reviewed and investigated promptly and fairly.

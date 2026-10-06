@@ -2,7 +2,7 @@
 
 
 a = Analysis(
-    ['musicdl.py'],
+    ['trackfetch.py'],
     pathex=[],
     binaries=[],
     datas=[],
@@ -22,7 +22,7 @@ exe = EXE(
     a.binaries,
     a.datas,
     [],
-    name='musicdl',
+    name='trackfetch',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

@@ -9,11 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ### Added
 - Ukrainian and Russian translations of the README.
 - A section on exporting playlists from Spotify, Apple Music, YouTube Music and other services with TuneMyMusic.
-- A tldr page in `docs/tldr/musicdl.md`.
+- A tldr page in `docs/tldr/trackfetch.md`.
 - Offline pytest suite (81 tests, 100% coverage) that runs in CI on Linux, macOS and Windows.
 
 ### Changed
-- musicdl is now licensed under the GPL-3.0-or-later instead of MIT. Version 1.0.0 remains available under MIT.
+- **Renamed from musicdl to trackfetch**, because the musicdl name is already taken by another project on PyPI. The command, Python module, release binaries and repository URL all changed; old GitHub links redirect. The default output folder is now `~/Music/trackfetch`. To keep using an existing folder and its `done.txt`, pass `-o ~/Music/musicdl`.
+- trackfetch is now licensed under the GPL-3.0-or-later instead of MIT. Version 1.0.0 remains available under MIT.
 
 ## [1.0.0] - 2026-10-06
 
@@ -28,4 +29,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - PyInstaller spec, plus prebuilt binaries for Linux, macOS and Windows on x86_64 and ARM64.
 - Automated releases: pushing a new version to `master` builds and publishes all binaries.
 
-[1.0.0]: https://github.com/ByteMe6/musicdl/releases/tag/v1.0.0
+[1.0.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v1.0.0

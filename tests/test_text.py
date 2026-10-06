@@ -1,6 +1,6 @@
 import pytest
 
-import musicdl as m
+import trackfetch as m
 
 
 class TestNormalize:
