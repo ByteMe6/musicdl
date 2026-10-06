@@ -1,4 +1,4 @@
 mutagen>=1.47
 requests>=2.31
 spotipy>=2.23
-yt-dlp>=2025.11.12
+yt-dlp>=2026.8.19
