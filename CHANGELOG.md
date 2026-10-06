@@ -7,7 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 ## [Unreleased]
 
 ### Added
+- Ukrainian and Russian translations of the README.
+- A section on exporting playlists from Spotify, Apple Music, YouTube Music and other services with TuneMyMusic.
+- A tldr page in `docs/tldr/musicdl.md`.
 - Offline pytest suite (81 tests, 100% coverage) that runs in CI on Linux, macOS and Windows.
+
+### Changed
+- musicdl is now licensed under the GPL-3.0-or-later instead of MIT. Version 1.0.0 remains available under MIT.
 
 ## [1.0.0] - 2026-10-06
 
