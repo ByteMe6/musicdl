@@ -5,6 +5,10 @@ name: Build & Release
 #
 # GITHUB_TOKEN may not create a tag on a commit that edits .github/workflows/,
 # so bump the version in a commit that leaves workflow files untouched.
+#
+# PyPI uploads use trusted publishing and stay off until the PYPI_PUBLISH
+# repository variable is "true". A version missing from PyPI is uploaded
+# from its tag, so an existing release can be published there later.
 on:
   push:
     branches: [master]
@@ -27,6 +31,7 @@ jobs:
       version: ${{ steps.check.outputs.version }}
       tag: ${{ steps.check.outputs.tag }}
       release: ${{ steps.check.outputs.release }}
+      pypi: ${{ steps.check.outputs.pypi }}
     steps:
       - uses: actions/checkout@v7
       - id: check
@@ -42,6 +47,11 @@ jobs:
           else
             echo "release=true" >> "$GITHUB_OUTPUT"
             echo "::notice::New version $version, releasing $tag"
+          fi
+          if curl -sf -o /dev/null "https://pypi.org/pypi/trackfetch/$version/json"; then
+            echo "pypi=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "pypi=true" >> "$GITHUB_OUTPUT"
           fi
 
   build:
@@ -129,3 +139,28 @@ jobs:
           body_path: notes.md
           make_latest: true
           files: assets/*
+
+  pypi:
+    name: publish to PyPI
+    needs: [ci, version]
+    if: needs.version.outputs.pypi == 'true' && vars.PYPI_PUBLISH == 'true'
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/trackfetch/${{ needs.version.outputs.version }}/
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ needs.version.outputs.release == 'true' && github.sha || needs.version.outputs.tag }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - name: Build sdist and wheel
+        run: |
+          pip install build twine
+          python -m build
+          twine check --strict dist/*
+      - uses: pypa/gh-action-pypi-publish@release/v1
