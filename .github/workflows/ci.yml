@@ -14,8 +14,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: astral-sh/ruff-action@v3
 
-  smoke:
-    name: smoke (py${{ matrix.python }}, ${{ matrix.os }})
+  test:
+    name: test (py${{ matrix.python }}, ${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -29,19 +29,8 @@ jobs:
           python-version: ${{ matrix.python }}
           cache: pip
       - name: Install package
-        run: pip install .
+        run: pip install ".[test]"
       - name: CLI responds
         run: musicdl --help
-      - name: Unit sanity checks
-        shell: python
-        run: |
-          import musicdl as m
-          assert m.parse_song("Daft Punk - One More Time") == ("Daft Punk", "One More Time")
-          assert m.parse_song("A - B - C") == ("A", "B - C")
-          assert m.parse_song("no separator") is None
-          assert m.sanitize_filename('AC/DC: "Back" <In> Black?') == "AC_DC_ _Back_ _In_ Black_"
-          assert m.similarity("Мёртвый Анархист", "мёртвый анархист") == 1.0
-          good = m.score_youtube_result({"title": "Song (Official Audio)"}, "Artist", "Song")
-          bad = m.score_youtube_result({"title": "Song (Karaoke Cover)"}, "Artist", "Song")
-          assert good > bad
-          print("ok")
+      - name: Tests
+        run: pytest --cov=musicdl --cov-report=term-missing --cov-fail-under=95

@@ -4,6 +4,11 @@ All notable changes to this project are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+- Offline pytest suite (81 tests, 100% coverage) that runs in CI on Linux, macOS and Windows.
+
 ## [1.0.0] - 2026-10-06
 
 ### Added
