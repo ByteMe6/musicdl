@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: astral-sh/ruff-action@v3
+
+  smoke:
+    name: smoke (py${{ matrix.python }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.10", "3.14"]
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+      - name: Install package
+        run: pip install .
+      - name: CLI responds
+        run: musicdl --help
+      - name: Unit sanity checks
+        shell: python
+        run: |
+          import musicdl as m
+          assert m.parse_song("Daft Punk - One More Time") == ("Daft Punk", "One More Time")
+          assert m.parse_song("A - B - C") == ("A", "B - C")
+          assert m.parse_song("no separator") is None
+          assert m.sanitize_filename('AC/DC: "Back" <In> Black?') == "AC_DC_ _Back_ _In_ Black_"
+          assert m.similarity("Мёртвый Анархист", "мёртвый анархист") == 1.0
+          good = m.score_youtube_result({"title": "Song (Official Audio)"}, "Artist", "Song")
+          bad = m.score_youtube_result({"title": "Song (Karaoke Cover)"}, "Artist", "Song")
+          assert good > bad
+          print("ok")
