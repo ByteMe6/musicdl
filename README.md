@@ -1,92 +1,65 @@
-<div align="center">
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/assets/banner-dark.svg">
+  <img alt="musicdl: a text file of songs in, tagged MP3s with cover art out" src=".github/assets/banner-light.svg" width="100%">
+</picture>
 
-# 🎵 musicdl
+<p align="center">
+  <a href="https://github.com/ByteMe6/musicdl/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/ByteMe6/musicdl?style=flat-square&label=release&labelColor=15122B&color=FFB547"></a>
+  <a href="https://github.com/ByteMe6/musicdl/actions/workflows/release.yml"><img alt="Build status" src="https://img.shields.io/github/actions/workflow/status/ByteMe6/musicdl/release.yml?branch=master&style=flat-square&label=build&labelColor=15122B"></a>
+  <a href="#install"><img alt="Python 3.10+" src="https://img.shields.io/badge/python-3.10%2B-FFB547?style=flat-square&labelColor=15122B"></a>
+  <a href="#standalone-binary"><img alt="Linux, macOS and Windows on x86_64 and ARM64" src="https://img.shields.io/badge/linux%20%C2%B7%20macos%20%C2%B7%20windows-x86__64%20%2B%20arm64-FFB547?style=flat-square&labelColor=15122B"></a>
+  <a href="LICENSE"><img alt="License: GPL-3.0-or-later" src="https://img.shields.io/badge/license-GPL--3.0--or--later-FFB547?style=flat-square&labelColor=15122B"></a>
+</p>
 
-**Turn a plain text list of songs into a library of properly tagged MP3s.**
+<p align="center">
+  <b>English</b> · <a href="README.uk.md">Українська</a> · <a href="README.ru.md">Русский</a>
+</p>
 
-Spotify supplies the metadata and album art, YouTube supplies the audio. musicdl scores the candidates on both sides to pick the best match.
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#playlists-from-streaming-services">Playlists from streaming services</a> ·
+  <a href="#usage">Usage</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#troubleshooting">Troubleshooting</a>
+</p>
 
-[![Build & Release](https://github.com/ByteMe6/musicdl/actions/workflows/release.yml/badge.svg?branch=master)](https://github.com/ByteMe6/musicdl/actions/workflows/release.yml)
-[![Release](https://img.shields.io/github/v/release/ByteMe6/musicdl?sort=semver)](https://github.com/ByteMe6/musicdl/releases/latest)
-[![Python](https://img.shields.io/badge/python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-lightgrey)](#-installation)
+<br>
 
-[Features](#-features) •
-[Installation](#-installation) •
-[Quick start](#-quick-start) •
-[Usage](#-usage) •
-[How it works](#-how-it-works) •
-[FAQ](#-troubleshooting)
+<img alt="Terminal recording: musicdl skips two songs that are already downloaded, finds Daft Punk - One More Time on Spotify, scores five YouTube results, downloads the best one and saves a tagged MP3" src=".github/assets/demo.svg" width="100%">
 
-</div>
+<br>
 
----
+musicdl reads a plain text file with one `Artist - Title` per line. For every song it looks up the official metadata and cover art on Spotify, picks the best-matching audio on YouTube, and saves an MP3 with complete ID3 tags. Runs are resumable, so you can stop a 1,000-song list at any point and pick it up later.
 
-```text
-$ musicdl songs.txt
-Found 3 songs
-Already completed: 0
-Output: /home/you/Music/musicdl
+- **Exact metadata.** The title, every credited artist, album, album artist, track number and release date come from Spotify, not from a YouTube video title.
+- **Album art.** The largest Spotify cover is embedded in every file.
+- **The right upload.** musicdl scores five YouTube results per song. Official audio wins; covers, karaoke, nightcore, sped-up, slowed, remix and reaction videos lose.
+- **Best quality.** yt-dlp extracts the audio as the highest-quality VBR MP3.
+- **Resumable.** Finished songs are logged in `done.txt` and skipped next time. Failures go to `failed.txt` with the reason.
+- **Plays everywhere.** Tags are written as ID3v2.3, which Windows Explorer, Apple Music, Android, car stereos and most other players read.
+- **Any alphabet.** Cyrillic and other non-Latin titles are matched correctly and kept in filenames. Characters that are illegal in filenames are replaced.
+- **No Python needed.** Standalone binaries for Linux, macOS and Windows on x86_64 and ARM64.
 
-============================================================
-[1/3]
-Daft Punk - Harder, Better, Faster, Stronger
-Spotify match score: 1.00
-Metadata: Daft Punk - Harder, Better, Faster, Stronger
-Searching YouTube: Daft Punk Harder, Better, Faster, Stronger
-  YouTube score 0.72: Harder, Better, Faster, Stronger (Official Audio)
-  YouTube score 0.45: Daft Punk - Harder Better Faster Stronger (Remix)
-Selected: Harder, Better, Faster, Stronger (Official Audio)
-Spotify cover downloaded
-SUCCESS: Daft Punk - Harder, Better, Faster, Stronger.mp3
-...
-```
+## Install
 
-## ✨ Features
+musicdl needs these tools on your `PATH`, plus a free Spotify API key ([set it up below](#spotify-credentials)):
 
-- **Batch downloads from a text file.** Write one `Artist - Title` per line. Comments and blank lines are allowed.
-- **Spotify metadata.** Each file gets the canonical title, every credited artist, album, album artist, track number and release date.
-- **Embedded album art.** The highest-resolution Spotify cover is written into the MP3 as the front cover.
-- **Scored YouTube matching.** musicdl compares several YouTube results instead of taking the first hit. It prefers official audio and penalises covers, karaoke, nightcore, sped-up and slowed edits, remixes and reaction videos.
-- **Best available quality.** yt-dlp extracts the audio as VBR MP3 (`--audio-quality 0`).
-- **Resumable runs.** Completed songs go to `done.txt` and are skipped on the next run, so you can stop and restart a 1,000-song list at any point.
-- **Failure log.** Every failed song goes to `failed.txt` with the reason, so you can review and retry.
-- **Wide player support.** Tags are written as ID3v2.3, which Windows Explorer, iTunes/Music, Android, car stereos and most other players read.
-- **Unicode-aware.** Cyrillic and other non-Latin titles are normalised for matching and kept in filenames.
-- **Safe filenames.** Characters that are illegal on Windows, macOS or Linux are replaced, and long names are truncated.
-- **Standalone binaries.** Prebuilt executables for Linux, macOS and Windows, each on x86_64 and ARM64, are attached to every release.
-
-## 📦 Installation
-
-### Prerequisites
-
-| Requirement | Why | Install |
+| Tool | Used for | Install |
 | --- | --- | --- |
-| **Python 3.10+** | Not needed for the prebuilt binary | [python.org](https://www.python.org/downloads/) |
-| **[yt-dlp](https://github.com/yt-dlp/yt-dlp)** (recent) | YouTube search and download | `pipx install yt-dlp` / `brew install yt-dlp` / `winget install yt-dlp` |
-| **[FFmpeg](https://ffmpeg.org/)** | Audio extraction and MP3 encoding | `apt install ffmpeg` / `brew install ffmpeg` / `winget install ffmpeg` |
-| **[Deno](https://deno.com/)** | JavaScript runtime that yt-dlp needs for YouTube | `curl -fsSL https://deno.land/install.sh \| sh` / `brew install deno` / `winget install DenoLand.Deno` |
-| **Spotify API credentials** | Metadata and cover art | See [Spotify credentials](#-spotify-credentials) |
+| [yt-dlp](https://github.com/yt-dlp/yt-dlp) | Searching and downloading from YouTube | `pipx install yt-dlp` · `brew install yt-dlp` · `winget install yt-dlp` |
+| [FFmpeg](https://ffmpeg.org/) | Converting the audio to MP3 | `sudo apt install ffmpeg` · `brew install ffmpeg` · `winget install ffmpeg` |
+| [Deno](https://deno.com/) | JavaScript runtime that yt-dlp needs for YouTube | `curl -fsSL https://deno.land/install.sh \| sh` · `brew install deno` · `winget install DenoLand.Deno` |
 
-> [!NOTE]
-> `yt-dlp`, `ffmpeg` and `deno` must be on your `PATH`. musicdl calls the `yt-dlp` executable directly.
+### Standalone binary
 
-### Option 1: pipx (recommended)
+No Python required. Download the file for your system from the [latest release](https://github.com/ByteMe6/musicdl/releases/latest):
 
-```bash
-pipx install git+https://github.com/ByteMe6/musicdl.git
-```
-
-### Option 2: prebuilt binary
-
-Download the executable for your platform from the [latest release](https://github.com/ByteMe6/musicdl/releases/latest):
-
-| OS | x86_64 | ARM64 |
+| | x86_64 | ARM64 |
 | --- | --- | --- |
-| 🐧 Linux | [`musicdl-linux-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-x86_64) | [`musicdl-linux-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-arm64) |
-| 🍎 macOS | [`musicdl-macos-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-x86_64) | [`musicdl-macos-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-arm64) |
-| 🪟 Windows | [`musicdl-windows-x86_64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-x86_64.exe) | [`musicdl-windows-arm64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-arm64.exe) |
+| **Linux** | [`musicdl-linux-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-x86_64) | [`musicdl-linux-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-linux-arm64) |
+| **macOS** | [`musicdl-macos-x86_64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-x86_64) (Intel) | [`musicdl-macos-arm64`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-macos-arm64) (Apple Silicon) |
+| **Windows** | [`musicdl-windows-x86_64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-x86_64.exe) | [`musicdl-windows-arm64.exe`](https://github.com/ByteMe6/musicdl/releases/latest/download/musicdl-windows-arm64.exe) |
 
 On Linux and macOS, make it executable and put it on your `PATH`:
 
@@ -95,27 +68,31 @@ chmod +x musicdl-linux-x86_64
 sudo mv musicdl-linux-x86_64 /usr/local/bin/musicdl
 ```
 
-> [!TIP]
-> On macOS, if Gatekeeper blocks the unsigned binary, run `xattr -d com.apple.quarantine musicdl-macos-*` once.
+On macOS, if Gatekeeper blocks the unsigned binary, run `xattr -d com.apple.quarantine musicdl-macos-*` once. Checksums are in `SHA256SUMS.txt` on each release.
 
-### Option 3: from source
+### pipx
+
+```bash
+pipx install git+https://github.com/ByteMe6/musicdl.git
+```
+
+### From source
 
 ```bash
 git clone https://github.com/ByteMe6/musicdl.git
 cd musicdl
 python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-python musicdl.py --help
+pip install -e .
 ```
 
-## 🔑 Spotify credentials
+## Spotify credentials
 
-musicdl uses Spotify's **Client Credentials** flow. No Spotify login or user permissions are involved.
+musicdl uses Spotify's Client Credentials flow: no Spotify login, no access to your account.
 
 1. Open the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and click **Create app**.
-2. Enter any name and description. For the redirect URI, enter `http://127.0.0.1:8888/callback`. It is never used, but the form requires one.
+2. Enter any name and description. For the redirect URI, enter `http://127.0.0.1:8888/callback`. musicdl never uses it, but the form requires one.
 3. Open the app's **Settings** and copy the **Client ID** and **Client Secret**.
-4. Export them in your shell:
+4. Set them as environment variables:
 
 <details open>
 <summary><b>bash / zsh</b></summary>
@@ -124,6 +101,7 @@ musicdl uses Spotify's **Client Credentials** flow. No Spotify login or user per
 export SPOTIFY_CLIENT_ID='your-client-id'
 export SPOTIFY_CLIENT_SECRET='your-client-secret'
 ```
+
 </details>
 
 <details>
@@ -133,6 +111,7 @@ export SPOTIFY_CLIENT_SECRET='your-client-secret'
 set -Ux SPOTIFY_CLIENT_ID 'your-client-id'
 set -Ux SPOTIFY_CLIENT_SECRET 'your-client-secret'
 ```
+
 </details>
 
 <details>
@@ -142,17 +121,18 @@ set -Ux SPOTIFY_CLIENT_SECRET 'your-client-secret'
 [Environment]::SetEnvironmentVariable('SPOTIFY_CLIENT_ID', 'your-client-id', 'User')
 [Environment]::SetEnvironmentVariable('SPOTIFY_CLIENT_SECRET', 'your-client-secret', 'User')
 ```
+
 </details>
 
 > [!CAUTION]
-> Spotipy caches the access token in a `.cache` file in the current directory. It is already listed in `.gitignore`. Never commit it.
+> Spotipy caches the access token in a `.cache` file in the current directory. Don't commit it or share it.
 
-## 🚀 Quick start
+## Quick start
 
 ```bash
 cat > songs.txt <<'EOF'
 # My playlist
-Daft Punk - Harder, Better, Faster, Stronger
+Daft Punk - One More Time
 Radiohead - Paranoid Android
 Korol i Shut - Мёртвый Анархист
 EOF
@@ -160,192 +140,163 @@ EOF
 musicdl songs.txt
 ```
 
-Your files are written to `~/Music/musicdl/`.
+The files land in `~/Music/musicdl/`.
 
-## 🛠 Usage
+## Playlists from streaming services
+
+You don't have to type the list by hand. [TuneMyMusic](https://www.tunemymusic.com/) exports playlists from Spotify, Apple Music, YouTube Music, Deezer, Tidal, SoundCloud and other services to a text file that musicdl reads as is:
+
+1. On [tunemymusic.com](https://www.tunemymusic.com/), choose the service your playlist is on as the source.
+2. Select the playlists you want.
+3. Choose **Export to file** as the destination and save it as **TXT**.
+4. Run musicdl on the exported file:
+
+```bash
+musicdl "My Playlist.txt" -o ~/Music/"My Playlist"
+```
+
+## Usage
 
 ```text
 musicdl [-h] [-o OUTPUT] [--title-only] [--delay DELAY] input
 ```
 
-| Argument | Default | Description |
+| Option | Default | What it does |
 | --- | --- | --- |
-| `input` | *required* | Text file with one `Artist - Title` per line |
-| `-o`, `--output` | `~/Music/musicdl` | Output directory. It is created if missing. |
+| `input` | required | Text file with one `Artist - Title` per line |
+| `-o`, `--output` | `~/Music/musicdl` | Folder to save the MP3s in. It's created if it doesn't exist. |
 | `--title-only` | off | Name files `Title.mp3` instead of `Artist - Title.mp3` |
-| `--delay` | `1.0` | Seconds to wait between songs. Raise it for large lists. |
-
-### Examples
+| `--delay` | `1.0` | Seconds to wait between songs. Raise it for long lists. |
 
 ```bash
-# Download to a custom folder
-musicdl songs.txt -o ~/Music/RoadTrip
-
-# Short filenames for a car stereo or USB stick
-musicdl songs.txt -o /media/usb --title-only
-
-# Go easy on rate limits for a huge list
-musicdl big-list.txt --delay 3
+musicdl songs.txt -o ~/Music/RoadTrip          # save to a specific folder
+musicdl songs.txt -o /media/usb --title-only   # short names for a car stereo
+musicdl big-list.txt --delay 3                 # go easy on rate limits
 ```
 
-### Input format
+### Input file
 
 ```text
-# Lines starting with "#" are comments
-Artist - Title
-Artist feat. Someone - Title - Live Version   ← the first " - " is the separator
+# Lines starting with "#" are comments. Blank lines are ignored.
+Daft Punk - One More Time
+Sufjan Stevens - Mystery of Love - Remastered   ← only the first " - " separates artist and title
 ```
 
-- The separator is **space, hyphen, space** (` - `). Only the first one counts, so titles may contain ` - `.
-- Blank lines and `#` comments are ignored. Lines without a separator are skipped.
-- See [`examples/songs.txt`](examples/songs.txt) for a ready-to-run sample.
+The separator is space, hyphen, space (` - `). Lines without it are skipped. See [`examples/songs.txt`](examples/songs.txt).
 
-### Output directory
+### Output folder
 
 ```text
 ~/Music/musicdl/
-├── Daft Punk - Harder, Better, Faster, Stronger.mp3
+├── Daft Punk - One More Time.mp3
 ├── Radiohead - Paranoid Android.mp3
-├── done.txt      ← songs that finished; skipped on later runs
-└── failed.txt    ← "Artist - Title | reason" for anything that failed
+├── done.txt      ← finished songs, skipped on the next run
+└── failed.txt    ← "Artist - Title | reason" for each song that failed
 ```
 
-To **retry failures**, strip the reasons from `failed.txt` and feed it back in:
+**Retry failures** by stripping the reasons from `failed.txt` and running it again:
 
 ```bash
-cut -d'|' -f1 ~/Music/musicdl/failed.txt | sed 's/ *$//' > retry.txt
+cut -d '|' -f 1 ~/Music/musicdl/failed.txt > retry.txt
 musicdl retry.txt
 ```
 
-To **force a re-download**, delete the song's line from `done.txt` and delete its MP3.
+**Re-download a song** by deleting its MP3 and its line in `done.txt`.
 
-## 🧠 How it works
+### Cheat sheet
 
-```mermaid
-flowchart LR
-    A["songs.txt<br/>Artist - Title"] --> B{"Spotify search<br/>artist: + track:"}
-    B -- no hits --> B2["Loose search<br/>artist title"]
-    B --> C["Pick best match<br/>70% title · 30% artist"]
-    B2 --> C
-    C --> D["Canonical metadata<br/>+ cover URL"]
-    D --> E["YouTube top 5<br/>via yt-dlp"]
-    E --> F["Score candidates<br/>+ official audio<br/>− cover / remix / slowed …"]
-    F --> G["yt-dlp → best-quality MP3"]
-    G --> H["Embed ID3v2.3 tags<br/>+ album art"]
-    H --> I["Artist - Title.mp3"]
-```
+A [tldr](https://tldr.sh/) page is in [`docs/tldr/musicdl.md`](docs/tldr/musicdl.md). To use it with [tealdeer](https://github.com/tealdeer-rs/tealdeer), copy it into your custom pages folder as `musicdl.page.md`.
 
-1. **Resolve the song on Spotify.** musicdl runs a strict `artist:"…" track:"…"` search and falls back to a loose search if nothing comes back. Each candidate gets a fuzzy-similarity score (70% title, 30% artist), and the best one supplies the official spelling, the full artist credits, the album data and the cover.
-2. **Find the audio on YouTube.** musicdl fetches the top 5 results for the *canonical* artist and title and scores each one:
+## How it works
 
-   | Signal | Effect |
+1. **Find the song on Spotify.** musicdl searches for `artist:"…" track:"…"` and falls back to a looser search if nothing comes back. Every result is scored by fuzzy similarity, 70% title and 30% artist, and the best one supplies the official spelling, all credited artists, the album details and the cover.
+2. **Find the audio on YouTube.** It searches YouTube for the official artist and title and scores the top five results:
+
+   | Signal | Effect on the score |
    | --- | --- |
-   | Title similarity | × 0.70 |
-   | Artist similarity | × 0.30 |
+   | Similarity to the song title | × 0.70 |
+   | Similarity to the artist | × 0.30 |
    | `official audio` in the video title | +0.08 |
    | `audio` in the video title | +0.03 |
    | `cover`, `karaoke`, `караоке`, `nightcore`, `sped up`, `slowed`, `remix`, `reaction` | −0.20 each |
 
-3. **Download.** yt-dlp downloads only the winning video and converts it to the highest-quality MP3.
-4. **Tag.** musicdl writes the following frames, replacing any existing ones:
+3. **Download.** yt-dlp downloads only the winning video and converts it to MP3.
+4. **Tag.** musicdl replaces any existing tags with these ID3v2.3 frames:
 
    | Frame | Content |
    | --- | --- |
    | `TIT2` | Title |
-   | `TPE1` | Artist(s) |
+   | `TPE1` | Artists |
    | `TALB` | Album |
    | `TPE2` | Album artist |
    | `TRCK` | Track number |
    | `TDRC` | Release date |
-   | `APIC` | Front cover (Spotify, up to 640×640) |
+   | `APIC` | Front cover, up to 640×640 |
 
-If Spotify has no match, the song is still downloaded and tagged with the artist and title from your input file.
+If Spotify has no match, the song is still downloaded and tagged with the artist and title from your file.
 
-## 🧩 Building a standalone binary
-
-```bash
-pip install -r requirements.txt pyinstaller
-pyinstaller musicdl.spec
-./dist/musicdl --help
-```
-
-## 🚢 Releasing
-
-Releases are fully automated by the [Build & Release](.github/workflows/release.yml) workflow:
-
-```mermaid
-flowchart LR
-    P["push to master"] --> CI["CI: lint + tests<br/>3 OS × 2 Python"]
-    P --> V{"version in pyproject.toml<br/>already tagged?"}
-    V -- yes --> S["done, no release"]
-    V -- no --> B["build 6 binaries<br/>Linux · macOS · Windows<br/>x86_64 + ARM64"]
-    CI --> B
-    B --> R["GitHub Release<br/>vX.Y.Z musicdl"]
-```
-
-To cut a new release:
-
-1. Bump `version` in [`pyproject.toml`](pyproject.toml).
-2. Add a `## [X.Y.Z] - YYYY-MM-DD` section to [`CHANGELOG.md`](CHANGELOG.md). It becomes the release notes.
-3. Push to `master`.
-
-Pushes that don't change the version only run CI.
-
-> [!IMPORTANT]
-> Bump the version in a commit that doesn't edit `.github/workflows/`. GitHub doesn't allow the workflow token to tag a commit that changes workflow files, so the release step would fail with a 403.
-
-## 🩺 Troubleshooting
+## Troubleshooting
 
 <details>
 <summary><b><code>ERROR: Spotify credentials not found.</code></b></summary>
 
-`SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` aren't set in the current shell. See [Spotify credentials](#-spotify-credentials).
+`SPOTIFY_CLIENT_ID` and `SPOTIFY_CLIENT_SECRET` aren't set in this terminal. See [Spotify credentials](#spotify-credentials).
+
 </details>
 
 <details>
-<summary><b><code>yt-dlp download failed</code> / <code>No YouTube result</code> for every song</b></summary>
+<summary><b>Every song fails with <code>no YouTube result</code> or <code>yt-dlp download failed</code></b></summary>
 
-YouTube changes often, so update yt-dlp first: `pipx upgrade yt-dlp` or `yt-dlp -U`. Recent yt-dlp versions also need a JavaScript runtime. Install [Deno](https://deno.com/) and make sure it's on your `PATH`.
+YouTube changes often. Update yt-dlp first with `pipx upgrade yt-dlp` or `yt-dlp -U`. Recent versions of yt-dlp also need Deno: check that `deno --version` works in the same terminal.
+
 </details>
 
 <details>
 <summary><b><code>ERROR: Postprocessing: ffprobe and ffmpeg not found</code></b></summary>
 
 Install FFmpeg and check that `ffmpeg -version` works in the same terminal.
+
 </details>
 
 <details>
 <summary><b>The wrong version of a song was downloaded</b></summary>
 
-Make the input line more specific, for example by using the exact Spotify spelling of the title. Then delete the MP3 and its line in `done.txt` and run musicdl again.
+Make the line in your file more specific, for example by using the exact title as Spotify spells it. Then delete the MP3 and its line in `done.txt` and run musicdl again. If it keeps picking the wrong upload, [open an issue](https://github.com/ByteMe6/musicdl/issues/new?template=bug_report.yml) with the `YouTube score` lines from the output.
+
 </details>
 
 <details>
-<summary><b>HTTP 429 / rate limiting</b></summary>
+<summary><b>HTTP 429 or other rate-limit errors</b></summary>
 
-Increase `--delay`, for example `--delay 3`. Interrupted runs resume where they stopped.
+Raise `--delay`, for example to `3`. Stopped runs continue where they left off.
+
 </details>
 
-## 🤝 Contributing
-
-Issues and pull requests are welcome.
+## Development
 
 ```bash
-git clone https://github.com/ByteMe6/musicdl.git && cd musicdl
-python -m venv .venv && source .venv/bin/activate
 pip install -e ".[test]" ruff
 ruff check .
 pytest --cov=musicdl
 ```
 
-The test suite stubs every network and subprocess call, so it runs offline in under a second and never touches Spotify or YouTube.
+The tests stub every network and subprocess call, so they run offline in under a second. To build a standalone binary yourself, run `pip install pyinstaller && pyinstaller musicdl.spec`; it ends up in `dist/`.
 
-Please keep pull requests focused, and describe what you changed and why.
+See [CONTRIBUTING.md](CONTRIBUTING.md) before opening a pull request.
 
-## ⚖️ Disclaimer
+### Releasing
 
-This tool is for **personal use** with content you have the right to download. You are responsible for complying with copyright law in your country and with the Terms of Service of YouTube and Spotify. musicdl is not affiliated with, endorsed by or sponsored by Spotify or YouTube. If you can, support the artists you listen to.
+Every push to `master` runs the tests on Linux, macOS and Windows. When `version` in [`pyproject.toml`](pyproject.toml) has no matching `vX.Y.Z` tag yet, the [Build & Release](.github/workflows/release.yml) workflow also builds all six binaries and publishes a release, using that version's section of [`CHANGELOG.md`](CHANGELOG.md) as the notes.
 
-## 📄 License
+To release, move the changes under `[Unreleased]` in the changelog to a new `## [X.Y.Z] - YYYY-MM-DD` section, bump `version`, and push.
 
-[MIT](LICENSE) © ByteMe6
+> [!IMPORTANT]
+> Bump the version in a commit that doesn't edit `.github/workflows/`. GitHub doesn't let the workflow token tag a commit that changes workflow files, so the release step would fail with a 403.
+
+## Disclaimer
+
+musicdl is for personal use with content you have the right to download. You are responsible for following copyright law where you live and the terms of service of YouTube and Spotify. musicdl isn't affiliated with or endorsed by Spotify, YouTube or TuneMyMusic. If you can, support the artists you listen to.
+
+## License
+
+musicdl is free software, released under the [GNU General Public License v3.0 or later](LICENSE). You can use, study, change and share it. If you distribute a modified version, it must stay under the same license.
