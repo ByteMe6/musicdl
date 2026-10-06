@@ -1,1 +1,8 @@
 blank_issues_enabled: false
+contact_links:
+  - name: Report a security vulnerability
+    url: https://github.com/ByteMe6/musicdl/security/advisories/new
+    about: Report it privately instead of opening a public issue.
+  - name: Read the troubleshooting guide
+    url: https://github.com/ByteMe6/musicdl#troubleshooting
+    about: Fixes for missing credentials, yt-dlp failures and wrong matches.
