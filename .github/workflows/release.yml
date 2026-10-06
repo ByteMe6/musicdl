@@ -125,9 +125,11 @@ jobs:
 
           Verify with `SHA256SUMS.txt`. Binaries still need `yt-dlp`, `ffmpeg` and `deno` on your `PATH`, plus Spotify API credentials. See the [README](https://github.com/ByteMe6/trackfetch#install).
 
-          Or install with pipx:
+          Or install with a package manager:
           ```bash
-          pipx install git+https://github.com/ByteMe6/trackfetch.git
+          brew install ByteMe6/tap/trackfetch      # Homebrew, macOS and Linux
+          pipx install trackfetch                  # PyPI
+          nix profile install github:ByteMe6/trackfetch
           ```
           MD
           cat notes.md
