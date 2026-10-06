@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - ID3v2.3 tags: title, artist, album, album artist, track number, release date and embedded front cover.
 - Resumable runs via `done.txt`, and a failure log with reasons in `failed.txt`.
 - `--output`, `--title-only` and `--delay` options.
-- PyInstaller spec, plus prebuilt binaries for Linux, macOS and Windows.
+- PyInstaller spec, plus prebuilt binaries for Linux, macOS and Windows on x86_64 and ARM64.
+- Automated releases: pushing a new version to `master` builds and publishes all binaries.
 
 [1.0.0]: https://github.com/ByteMe6/musicdl/releases/tag/v1.0.0
