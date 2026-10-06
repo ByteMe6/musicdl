@@ -1,7 +1,7 @@
 import pytest
 from mutagen.id3 import ID3, TIT2
 
-import musicdl as m
+import trackfetch as m
 
 JPEG = b"\xff\xd8\xff\xe0fake-jpeg"
 

@@ -21,7 +21,7 @@ body:
     id: log
     attributes:
       label: Console output
-      description: Paste the relevant musicdl output. Do **not** include your Spotify credentials.
+      description: Paste the relevant trackfetch output. Do **not** include your Spotify credentials.
       render: text
   - type: input
     id: versions

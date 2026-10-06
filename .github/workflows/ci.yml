@@ -31,6 +31,6 @@ jobs:
       - name: Install package
         run: pip install ".[test]"
       - name: CLI responds
-        run: musicdl --help
+        run: trackfetch --help
       - name: Tests
-        run: pytest --cov=musicdl --cov-report=term-missing --cov-fail-under=95
+        run: pytest --cov=trackfetch --cov-report=term-missing --cov-fail-under=95

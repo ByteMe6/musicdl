@@ -1,7 +1,7 @@
 import pytest
 from conftest import FakeSpotify, make_track
 
-import musicdl as m
+import trackfetch as m
 
 
 class TestGetSpotify:

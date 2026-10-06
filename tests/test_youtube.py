@@ -3,7 +3,7 @@ import subprocess
 
 import pytest
 
-import musicdl as m
+import trackfetch as m
 
 
 def completed(stdout="", returncode=0):
