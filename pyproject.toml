@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "musicdl"
 version = "1.0.0"
-description = "Batch-download songs as fully tagged MP3s: Spotify metadata and cover art, best-match YouTube audio via yt-dlp."
+description = "Turn a text file of songs into tagged MP3s: Spotify metadata and cover art, best-match YouTube audio via yt-dlp."
 readme = "README.md"
-license = "MIT"
+license = "GPL-3.0-or-later"
 license-files = ["LICENSE"]
 authors = [{ name = "ByteMe6" }]
 requires-python = ">=3.10"
