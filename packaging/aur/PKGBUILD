@@ -1,0 +1,43 @@
+# Maintainer: ByteMe6 <https://github.com/ByteMe6>
+
+pkgname=trackfetch
+pkgver=2.0.0
+pkgrel=1
+pkgdesc="Turn a text file of songs into tagged MP3s using Spotify metadata and YouTube audio"
+arch=('any')
+url="https://github.com/ByteMe6/trackfetch"
+license=('GPL-3.0-or-later')
+depends=(
+  'deno'
+  'ffmpeg'
+  'python'
+  'python-mutagen'
+  'python-requests'
+  'python-spotipy'
+  'yt-dlp'
+)
+makedepends=(
+  'python-build'
+  'python-installer'
+  'python-setuptools'
+  'python-wheel'
+)
+checkdepends=('python-pytest')
+source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
+sha256sums=('e9e134c10ec0f5e0f07a3c5d087686a1b4ad2359dac37d3374e7764c6838c5ea')
+
+build() {
+  cd "$pkgname-$pkgver"
+  python -m build --wheel --no-isolation
+}
+
+check() {
+  cd "$pkgname-$pkgver"
+  python -m pytest -p no:cacheprovider
+}
+
+package() {
+  cd "$pkgname-$pkgver"
+  python -m installer --destdir="$pkgdir" dist/*.whl
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+}

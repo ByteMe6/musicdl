@@ -1,0 +1,23 @@
+pkgbase = trackfetch
+	pkgdesc = Turn a text file of songs into tagged MP3s using Spotify metadata and YouTube audio
+	pkgver = 2.0.0
+	pkgrel = 1
+	url = https://github.com/ByteMe6/trackfetch
+	arch = any
+	license = GPL-3.0-or-later
+	checkdepends = python-pytest
+	makedepends = python-build
+	makedepends = python-installer
+	makedepends = python-setuptools
+	makedepends = python-wheel
+	depends = deno
+	depends = ffmpeg
+	depends = python
+	depends = python-mutagen
+	depends = python-requests
+	depends = python-spotipy
+	depends = yt-dlp
+	source = trackfetch-2.0.0.tar.gz::https://github.com/ByteMe6/trackfetch/archive/refs/tags/v2.0.0.tar.gz
+	sha256sums = e9e134c10ec0f5e0f07a3c5d087686a1b4ad2359dac37d3374e7764c6838c5ea
+
+pkgname = trackfetch
