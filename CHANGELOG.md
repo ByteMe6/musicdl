@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-08
+
 ### Added
 - `-f`/`--format` option to choose `mp3` (default), `m4a` or `opus`. Opus and M4A keep YouTube's original audio without re-encoding; every format gets the same tags and embedded cover art.
 - Install with Homebrew (`brew install ByteMe6/tap/trackfetch`), from PyPI (`pipx install trackfetch`) or with Nix (`nix run github:ByteMe6/trackfetch`).
@@ -37,6 +39,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/).
 - PyInstaller spec, plus prebuilt binaries for Linux, macOS and Windows on x86_64 and ARM64.
 - Automated releases: pushing a new version to `master` builds and publishes all binaries.
 
-[Unreleased]: https://github.com/ByteMe6/trackfetch/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/ByteMe6/trackfetch/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v2.1.0
 [2.0.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v2.0.0
 [1.0.0]: https://github.com/ByteMe6/trackfetch/releases/tag/v1.0.0
