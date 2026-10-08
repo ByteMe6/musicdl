@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
 import argparse
+import base64
 import json
 import os
 import re
@@ -16,6 +17,7 @@ from pathlib import Path
 
 import requests
 import spotipy
+from mutagen.flac import Picture
 from mutagen.id3 import (
     APIC,
     ID3,
@@ -26,9 +28,23 @@ from mutagen.id3 import (
     TPE2,
     TRCK,
 )
+from mutagen.mp4 import MP4, MP4Cover
+from mutagen.oggopus import OggOpus
 from spotipy.oauth2 import SpotifyClientCredentials
 
 YTDLP_REMOTE_COMPONENTS = "ejs:github"
+
+AUDIO_FORMATS = {
+    "mp3": [],
+    "m4a": [
+        "-f",
+        "bestaudio[ext=m4a]/bestaudio",
+    ],
+    "opus": [
+        "-f",
+        "bestaudio[acodec=opus]/bestaudio",
+    ],
+}
 
 
 def normalize(text: str) -> str:
@@ -184,7 +200,7 @@ def download_cover(url: str, destination: Path):
         url,
         timeout=30,
         headers={
-            "User-Agent": "trackfetch/2.0"
+            "User-Agent": "trackfetch/2.1"
         },
     )
 
@@ -306,14 +322,16 @@ def find_youtube_video(artist: str, title: str):
 def download_audio(
     video_url: str,
     temp_dir: Path,
+    audio_format: str = "mp3",
 ):
     template = str(temp_dir / "audio.%(ext)s")
 
     command = [
         "yt-dlp",
+        *AUDIO_FORMATS[audio_format],
         "-x",
         "--audio-format",
-        "mp3",
+        audio_format,
         "--audio-quality",
         "0",
         "--remote-components",
@@ -329,7 +347,7 @@ def download_audio(
     if result.returncode != 0:
         return None
 
-    files = list(temp_dir.glob("audio.mp3"))
+    files = list(temp_dir.glob(f"audio.{audio_format}"))
 
     if not files:
         return None
@@ -338,6 +356,31 @@ def download_audio(
 
 
 def add_metadata(
+    audio_path: Path,
+    cover_path: Path,
+    metadata: dict,
+):
+    if audio_path.suffix == ".opus":
+        add_opus_metadata(
+            audio_path,
+            cover_path,
+            metadata,
+        )
+    elif audio_path.suffix == ".m4a":
+        add_m4a_metadata(
+            audio_path,
+            cover_path,
+            metadata,
+        )
+    else:
+        add_mp3_metadata(
+            audio_path,
+            cover_path,
+            metadata,
+        )
+
+
+def add_mp3_metadata(
     mp3_path: Path,
     cover_path: Path,
     metadata: dict,
@@ -423,7 +466,84 @@ def add_metadata(
     )
 
 
-def make_filename(metadata, title_only):
+def add_opus_metadata(
+    opus_path: Path,
+    cover_path: Path,
+    metadata: dict,
+):
+    audio = OggOpus(opus_path)
+
+    fields = {
+        "TITLE": metadata["title"],
+        "ARTIST": metadata["artist"],
+        "ALBUM": metadata["album"],
+        "ALBUMARTIST": metadata["album_artist"],
+        "TRACKNUMBER": metadata["track_number"],
+        "DATE": metadata["release_date"],
+    }
+
+    for key in [*fields, "METADATA_BLOCK_PICTURE"]:
+        if key in audio:
+            del audio[key]
+
+    for key, value in fields.items():
+        if value:
+            audio[key] = str(value)
+
+    if cover_path.exists():
+        picture = Picture()
+        picture.type = 3
+        picture.mime = "image/jpeg"
+        picture.desc = "Cover"
+        picture.data = cover_path.read_bytes()
+
+        audio["METADATA_BLOCK_PICTURE"] = base64.b64encode(
+            picture.write()
+        ).decode("ascii")
+
+    audio.save()
+
+
+def add_m4a_metadata(
+    m4a_path: Path,
+    cover_path: Path,
+    metadata: dict,
+):
+    audio = MP4(m4a_path)
+
+    fields = {
+        "\xa9nam": metadata["title"],
+        "\xa9ART": metadata["artist"],
+        "\xa9alb": metadata["album"],
+        "aART": metadata["album_artist"],
+        "\xa9day": metadata["release_date"],
+    }
+
+    for key in [*fields, "trkn", "covr"]:
+        if key in audio:
+            del audio[key]
+
+    for key, value in fields.items():
+        if value:
+            audio[key] = [str(value)]
+
+    if metadata["track_number"]:
+        audio["trkn"] = [
+            (int(metadata["track_number"]), 0)
+        ]
+
+    if cover_path.exists():
+        audio["covr"] = [
+            MP4Cover(
+                cover_path.read_bytes(),
+                imageformat=MP4Cover.FORMAT_JPEG,
+            )
+        ]
+
+    audio.save()
+
+
+def make_filename(metadata, title_only, audio_format="mp3"):
     if title_only:
         name = metadata["title"]
     else:
@@ -432,7 +552,7 @@ def make_filename(metadata, title_only):
             f"{metadata['title']}"
         )
 
-    return sanitize_filename(name) + ".mp3"
+    return sanitize_filename(name) + "." + audio_format
 
 
 def read_done(done_file: Path):
@@ -463,6 +583,7 @@ def process_song(
     input_title,
     output,
     title_only,
+    audio_format="mp3",
 ):
     track = find_spotify_track(
         sp,
@@ -485,6 +606,7 @@ def process_song(
     filename = make_filename(
         metadata,
         title_only,
+        audio_format,
     )
 
     final_path = output / filename
@@ -523,12 +645,13 @@ def process_song(
     with tempfile.TemporaryDirectory() as temp:
         temp_dir = Path(temp)
 
-        mp3_path = download_audio(
+        audio_path = download_audio(
             video_url,
             temp_dir,
+            audio_format,
         )
 
-        if not mp3_path:
+        if not audio_path:
             return False, "yt-dlp download failed"
 
         cover_path = temp_dir / "cover.jpg"
@@ -550,7 +673,7 @@ def process_song(
 
         try:
             add_metadata(
-                mp3_path,
+                audio_path,
                 cover_path,
                 metadata,
             )
@@ -560,7 +683,7 @@ def process_song(
 
         try:
             shutil.move(
-                str(mp3_path),
+                str(audio_path),
                 str(final_path),
             )
 
@@ -592,6 +715,14 @@ def main():
         type=Path,
         default=Path.home() / "Music" / "trackfetch",
         help="Output directory",
+    )
+
+    parser.add_argument(
+        "-f",
+        "--format",
+        choices=list(AUDIO_FORMATS),
+        default="mp3",
+        help="Audio format",
     )
 
     parser.add_argument(
@@ -672,6 +803,7 @@ def main():
             title,
             args.output,
             args.title_only,
+            args.format,
         )
 
         if ok:

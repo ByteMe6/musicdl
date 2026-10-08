@@ -100,3 +100,33 @@ class TestDownloadAudio:
     def test_no_output_file(self, monkeypatch, tmp_path):
         monkeypatch.setattr(m.subprocess, "run", lambda cmd: completed())
         assert m.download_audio("u", tmp_path) is None
+
+    @pytest.mark.parametrize(
+        ("audio_format", "selector"),
+        [
+            ("mp3", None),
+            ("m4a", "bestaudio[ext=m4a]/bestaudio"),
+            ("opus", "bestaudio[acodec=opus]/bestaudio"),
+        ],
+    )
+    def test_format_arguments(self, monkeypatch, tmp_path, audio_format, selector):
+        def fake_run(cmd):
+            assert cmd[cmd.index("--audio-format") + 1] == audio_format
+            if selector:
+                assert cmd[cmd.index("-f") + 1] == selector
+            else:
+                assert "-f" not in cmd
+            (tmp_path / f"audio.{audio_format}").write_bytes(b"x")
+            return completed()
+
+        monkeypatch.setattr(m.subprocess, "run", fake_run)
+        expected = tmp_path / f"audio.{audio_format}"
+        assert m.download_audio("u", tmp_path, audio_format) == expected
+
+    def test_ignores_files_in_other_formats(self, monkeypatch, tmp_path):
+        def fake_run(cmd):
+            (tmp_path / "audio.webm").write_bytes(b"x")
+            return completed()
+
+        monkeypatch.setattr(m.subprocess, "run", fake_run)
+        assert m.download_audio("u", tmp_path, "opus") is None

@@ -1,8 +1,11 @@
+import shutil
 import sys
 
 import pytest
-from conftest import make_track
+from conftest import FIXTURES, make_track
 from mutagen.id3 import ID3
+from mutagen.mp4 import MP4
+from mutagen.oggopus import OggOpus
 
 import trackfetch as m
 
@@ -16,6 +19,7 @@ def pipeline(monkeypatch):
         "download_ok": True,
         "cover_ok": True,
         "downloaded_urls": [],
+        "formats": [],
         "searched": [],
     }
 
@@ -23,12 +27,16 @@ def pipeline(monkeypatch):
         state["searched"].append((artist, title))
         return state["track"]
 
-    def fake_download_audio(url, temp_dir):
+    def fake_download_audio(url, temp_dir, audio_format="mp3"):
         state["downloaded_urls"].append(url)
+        state["formats"].append(audio_format)
         if not state["download_ok"]:
             return None
-        path = temp_dir / "audio.mp3"
-        path.write_bytes(b"\x00" * 64)
+        path = temp_dir / f"audio.{audio_format}"
+        if audio_format == "mp3":
+            path.write_bytes(b"\x00" * 64)
+        else:
+            shutil.copy(FIXTURES / f"silence.{audio_format}", path)
         return path
 
     def fake_download_cover(url, dest):
@@ -56,6 +64,23 @@ class TestProcessSong:
         assert tags["TALB"].text == ["Discovery"]
         assert tags.getall("APIC")
         assert pipeline["downloaded_urls"] == ["https://www.youtube.com/watch?v=abc"]
+
+    def test_opus(self, pipeline, tmp_path):
+        assert m.process_song(None, "a", "b", tmp_path, False, "opus") == (True, "downloaded")
+        tags = OggOpus(tmp_path / "Daft Punk - One More Time.opus")
+        assert tags["TITLE"] == ["One More Time"]
+        assert tags["METADATA_BLOCK_PICTURE"]
+        assert pipeline["formats"] == ["opus"]
+
+    def test_m4a(self, pipeline, tmp_path):
+        assert m.process_song(None, "a", "b", tmp_path, False, "m4a") == (True, "downloaded")
+        tags = MP4(tmp_path / "Daft Punk - One More Time.m4a")
+        assert tags["\xa9alb"] == ["Discovery"]
+        assert tags["covr"]
+
+    def test_existing_file_check_uses_format_extension(self, pipeline, tmp_path):
+        (tmp_path / "Daft Punk - One More Time.mp3").write_bytes(b"")
+        assert m.process_song(None, "a", "b", tmp_path, False, "opus") == (True, "downloaded")
 
     def test_title_only(self, pipeline, tmp_path):
         m.process_song(None, "a", "b", tmp_path, True)
@@ -185,3 +210,27 @@ class TestMain:
         log = capsys.readouterr().out
         assert "SKIPPED: 1" in log
         assert m.read_done(out / "done.txt") == {"Daft Punk - One More Time"}
+
+    def test_format_option(self, pipeline, monkeypatch, tmp_path):
+        songs = tmp_path / "songs.txt"
+        songs.write_text("Daft Punk - One More Time\n", encoding="utf-8")
+        out = tmp_path / "o"
+
+        run_cli(monkeypatch, songs, "-o", out, "--format", "opus")
+        assert (out / "Daft Punk - One More Time.opus").exists()
+        assert pipeline["formats"] == ["opus"]
+
+    def test_default_format_is_mp3(self, pipeline, monkeypatch, tmp_path):
+        songs = tmp_path / "songs.txt"
+        songs.write_text("Daft Punk - One More Time\n", encoding="utf-8")
+
+        run_cli(monkeypatch, songs, "-o", tmp_path / "o")
+        assert pipeline["formats"] == ["mp3"]
+
+    def test_rejects_unknown_format(self, monkeypatch, tmp_path, capsys):
+        songs = tmp_path / "songs.txt"
+        songs.write_text("A - B\n", encoding="utf-8")
+        with pytest.raises(SystemExit) as exc:
+            run_cli(monkeypatch, songs, "--format", "flac")
+        assert exc.value.code == 2
+        assert "invalid choice" in capsys.readouterr().err

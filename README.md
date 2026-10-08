@@ -36,7 +36,7 @@ trackfetch reads a plain text file with one `Artist - Title` per line. For every
 - **Exact metadata.** The title, every credited artist, album, album artist, track number and release date come from Spotify, not from a YouTube video title.
 - **Album art.** The largest Spotify cover is embedded in every file.
 - **The right upload.** trackfetch scores five YouTube results per song. Official audio wins; covers, karaoke, nightcore, sped-up, slowed, remix and reaction videos lose.
-- **Best quality.** yt-dlp extracts the audio as the highest-quality VBR MP3.
+- **Your choice of format.** MP3 for any player, or Opus and M4A that keep YouTube's original audio without re-encoding.
 - **Resumable.** Finished songs are logged in `done.txt` and skipped next time. Failures go to `failed.txt` with the reason.
 - **Plays everywhere.** Tags are written as ID3v2.3, which Windows Explorer, Apple Music, Android, car stereos and most other players read.
 - **Any alphabet.** Cyrillic and other non-Latin titles are matched correctly and kept in filenames. Characters that are illegal in filenames are replaced.
@@ -182,13 +182,14 @@ trackfetch "My Playlist.txt" -o ~/Music/"My Playlist"
 ## Usage
 
 ```text
-trackfetch [-h] [-o OUTPUT] [--title-only] [--delay DELAY] input
+trackfetch [-h] [-o OUTPUT] [-f {mp3,m4a,opus}] [--title-only] [--delay DELAY] input
 ```
 
 | Option | Default | What it does |
 | --- | --- | --- |
 | `input` | required | Text file with one `Artist - Title` per line |
-| `-o`, `--output` | `~/Music/trackfetch` | Folder to save the MP3s in. It's created if it doesn't exist. |
+| `-o`, `--output` | `~/Music/trackfetch` | Folder to save the files in. It's created if it doesn't exist. |
+| `-f`, `--format` | `mp3` | Audio format: `mp3`, `m4a` or `opus`. See [Audio formats](#audio-formats). |
 | `--title-only` | off | Name files `Title.mp3` instead of `Artist - Title.mp3` |
 | `--delay` | `1.0` | Seconds to wait between songs. Raise it for long lists. |
 
@@ -196,7 +197,18 @@ trackfetch [-h] [-o OUTPUT] [--title-only] [--delay DELAY] input
 trackfetch songs.txt -o ~/Music/RoadTrip          # save to a specific folder
 trackfetch songs.txt -o /media/usb --title-only   # short names for a car stereo
 trackfetch big-list.txt --delay 3                 # go easy on rate limits
+trackfetch songs.txt --format opus                # original YouTube audio, no re-encode
 ```
+
+### Audio formats
+
+| Format | What you get | Plays on |
+| --- | --- | --- |
+| `mp3` (default) | YouTube's audio **re-encoded** to the best VBR MP3. A second lossy encode, so slightly below the source | everything, including old players and car stereos |
+| `opus` | YouTube's **original** Opus audio, copied without re-encoding. The best quality you can get | most modern players, Android, browsers; not iTunes or older devices |
+| `m4a` | YouTube's **original** AAC audio when available, copied without re-encoding | Apple devices, iTunes, most players |
+
+All three get the same tags and embedded cover art. `done.txt` doesn't track the format, so use a separate `-o` folder for each format.
 
 ### Input file
 

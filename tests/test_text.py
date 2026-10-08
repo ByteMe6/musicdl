@@ -74,3 +74,8 @@ class TestMakeFilename:
     def test_sanitized(self, metadata):
         metadata["artist"] = "AC/DC"
         assert m.make_filename(metadata, title_only=False) == "AC_DC - One More Time.mp3"
+
+    @pytest.mark.parametrize("audio_format", ["mp3", "m4a", "opus"])
+    def test_extension_follows_format(self, metadata, audio_format):
+        name = m.make_filename(metadata, title_only=True, audio_format=audio_format)
+        assert name == f"One More Time.{audio_format}"
