@@ -1,0 +1,42 @@
+name: nixpkgs package
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: nixpkgs repository
+        default: ByteMe6/nixpkgs
+      ref:
+        description: Branch, tag or commit
+        default: trackfetch-init
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build (${{ matrix.system }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, system: x86_64-linux }
+          - { os: ubuntu-24.04-arm, system: aarch64-linux }
+          - { os: macos-latest, system: aarch64-darwin }
+    env:
+      REF: github:${{ inputs.repo }}/${{ inputs.ref }}
+      SYSTEM: ${{ matrix.system }}
+    steps:
+      - uses: cachix/install-nix-action@v31
+      - name: Build
+        run: nix build "$REF#trackfetch" -L
+      - name: Check platform
+        run: |
+          built=$(nix eval --raw "$REF#trackfetch.stdenv.hostPlatform.system")
+          echo "built for $built"
+          test "$built" = "$SYSTEM"
+      - name: CLI responds
+        run: ./result/bin/trackfetch --help
+      - name: Package tests
+        run: nix build "$REF#trackfetch.tests.help" "$REF#trackfetch.tests.missing-credentials" -L --no-link
